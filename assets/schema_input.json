@@ -17,14 +17,14 @@
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.{f(ast)?q\\.gz,bam}$",
+                "pattern": "^\\S+.{f(ast)?q.gz,bam}$",
                 "errorMessage": "FastQ or bam file for the treatment/tumor reads must be provided, cannot contain spaces and must have extension '.fq.gz', '.fastq.gz', or '.bam'"
             },
             "ctl_bam": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.{f(ast)?q\\.gz,bam}$",
+                "pattern": "^\\S+.{f(ast)?q.gz,bam}$",
                 "errorMessage": "FastQ or bam file for the control/normal reads may optionally be provided (must be provided if run in tumor/normal mode), cannot contain spaces and must have extension '.fq.gz', '.fastq.gz', or '.bam'"
             },
             "ind_fasta": {
