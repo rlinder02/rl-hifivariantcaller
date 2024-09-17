@@ -49,6 +49,6 @@
                 "errorMessage": "Chain file for lifting over the individual genome coordinates to reference genome coordinates for annotaiton must be provided, cannot contain spaces and must have extension '.chain'"
             }
         },
-        "required": ["sample", "tx_bam", "ind_fasta", "ref_fasta"]
+        "required": ["sample", "tx_bam", "ind_fasta", "ref_fasta, chain"]
     }
 }

@@ -1,2 +1,2 @@
 sample,tx_bam,ctl_bam,ind_fasta,ref_fasta,chain
-J20_HPPCPS,data/J20_HPPCPS_APP_m84137_240223_190109_s4.hifi_reads.bc2067.fastq.gz,data/J20_HPPCPS_CTL_m84137_240223_210015_s1.hifi_reads.bc2068.fastq.gz,data/J20_CTL.primary.scaffolded.fasta,data/mm10.chrs.fasta,
+J20_HPPCPS,data/J20_HPPCPS_APP_m84137_240223_190109_s4.hifi_reads.bc2067.fastq.gz,data/J20_HPPCPS_CTL_m84137_240223_210015_s1.hifi_reads.bc2068.fastq.gz,data/J20_CTL.primary.scaffolded.fasta,data/mm10.chrs.fasta,data/placeholder.chain
