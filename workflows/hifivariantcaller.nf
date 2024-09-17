@@ -3,8 +3,8 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+include { ALIGNMENT               } from '../subworkflows/local/alignment'
 
-include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -28,13 +28,15 @@ workflow HIFIVARIANTCALLER {
     ch_multiqc_files = Channel.empty()
 
     //
-    // MODULE: Run FastQC
+    // SUBWORKFLOW: Align HiFi reads to individual-specific genome and run QC
     //
-    FASTQC (
+    ALIGNMENT (
         ch_samplesheet
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+
+    ALIGNMENT.out.bam_qc.map {it[1]}.view()
+    ch_multiqc_files = ch_multiqc_files.mix(ALIGNMENT.out.bam_qc.map {it[1]})
+    ch_versions = ch_versions.mix(ALIGNMENT.out.versions.first())
 
     //
     // Collate and save software versions

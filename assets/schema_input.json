@@ -13,21 +13,42 @@
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
-            "fastq_1": {
+            "tx_bam": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.{f(ast)?q\\.gz,bam}$",
+                "errorMessage": "FastQ or bam file for the treatment/tumor reads must be provided, cannot contain spaces and must have extension '.fq.gz', '.fastq.gz', or '.bam'"
             },
-            "fastq_2": {
+            "ctl_bam": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.{f(ast)?q\\.gz,bam}$",
+                "errorMessage": "FastQ or bam file for the control/normal reads may optionally be provided (must be provided if run in tumor/normal mode), cannot contain spaces and must have extension '.fq.gz', '.fastq.gz', or '.bam'"
+            },
+            "ind_fasta": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f(ast)?a$",
+                "errorMessage": "Fasta file for the assembly of the individual must be provided, cannot contain spaces and must have extension '.fa' or '.fasta'"
+            },
+            "ref_fasta": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f(ast)?a$",
+                "errorMessage": "Fasta file for the reference genome to use as a source of annotations must be provided, cannot contain spaces and must have extension '.fa' or '.fasta'"
+            },
+            "chain": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.chain$",
+                "errorMessage": "Chain file for lifting over the individual genome coordinates to reference genome coordinates for annotaiton must be provided, cannot contain spaces and must have extension '.chain'"
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": ["sample", "tx_bam", "ind_fasta", "ref_fasta"] // add chain in as required
     }
 }
