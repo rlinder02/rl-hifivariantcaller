@@ -7,8 +7,11 @@ workflow ALIGNMENT {
     ch_samplesheet // channel: [ val(meta), path(tx.bam), path(ctl.bam), path(ind.fasta), path(ref.fasta), path(chain) ]
 
     main:
+    ch_samplesheet.view()
 
     ch_tx_bam = ch_samplesheet.map { meta, tx, ctl, ind, ref, chain -> [meta, tx] }
+    ch_tx_bam.view()
+
     ch_ind_genome = ch_samplesheet.map { meta, tx, ctl, ind, ref, chain -> [meta, ind] }
     ch_ref_genome = ch_samplesheet.map { meta, tx, ctl, ind, ref, chain -> [meta, ref] }
     ch_tx_bam_ind_genome = ch_tx_bam.combine(ch_ind_genome,by:0)
