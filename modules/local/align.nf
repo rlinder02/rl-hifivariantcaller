@@ -2,10 +2,10 @@ process ALIGN {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "bioconda::pbmm2=1.14.99"
+    conda "bioconda::pbmm2=1.13.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://community.wave.seqera.io/library/pbmm2:1.14.99--a20728ce61d5cf18':
-        'community.wave.seqera.io/library/pbmm2:1.14.99--a20728ce61d5cf18' }"
+        'oras://community.wave.seqera.io/library/pbmm2:1.13.1--9fdbcfc25bbe21c9':
+        'community.wave.seqera.io/library/pbmm2:1.13.1--9fdbcfc25bbe21c9' }"
 
     input:
     tuple val(meta), path(bam), path(fasta)
