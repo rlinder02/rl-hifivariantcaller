@@ -26,7 +26,6 @@ process ALIGN {
         $fasta \\
         $bam \\
         ${prefix}.sorted.bam \\
-        --sample $prefix \\
         --sort \\
         -j $task.cpus \\
         --preset HIFI \\
