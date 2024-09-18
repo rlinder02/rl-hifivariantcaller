@@ -21,6 +21,7 @@ workflow ALIGNMENT {
         ch_bam_ref = ch_tx_bam_ind_genome.mix(ch_ctl_bam_ind_genome)
     }
     ch_versions = Channel.empty()
+    ch_bam_ref.view()
 
 
     ALIGN ( ch_bam_ref )

@@ -26,7 +26,6 @@ workflow HIFIVARIANTCALLER {
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
-    ch_samplesheet.view()
     //
     // SUBWORKFLOW: Align HiFi reads to individual-specific genome and run QC
     //
