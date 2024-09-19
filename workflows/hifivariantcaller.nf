@@ -74,7 +74,7 @@ workflow HIFIVARIANTCALLER {
                                             meta = meta.id
                                             [meta, bam , ref]
                                             }.groupTuple(by:0).view()
-        ch_test2 = ch_bam_ref.groupTuple(by:0[0]).view()
+        ch_test2 = ch_bam_ref.groupTuple(by:0).view()
     }
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
