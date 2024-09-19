@@ -73,7 +73,7 @@ workflow HIFIVARIANTCALLER {
         // def custom_sort = {item1,item2 -> item2.name <=> item1.name}
         ch_bam_ref.map { meta, bam, ref -> meta = meta.id
                                             [meta, bam , ref]
-                                            }.groupBy { item -> item[0] }.map { groupKey, items -> 
+                                            }.groupTuple(by:0).map { groupKey, items -> 
                                                 def searchString = 'CTL'
                                                 def sortedItems = items.sort { item -> item.contains(searchString) ? 1: 0 }
                                                 [groupKey, sortedItems]}.view()
