@@ -73,14 +73,17 @@ workflow HIFIVARIANTCALLER {
         // def custom_sort = { item1,item2 -> item1.contains('CTL') ? 1: 0
         //                                     item2.contains('CTL') ? 1: 0 
         //                                     }
+        // .map { meta, bam, ref ->
+        //                                     def bam1 = bam[0].name.toString().split('/').last().split('_')[2]
+        //                                     def bam2 = bam[1].name.toString().split('/').last().split('_')[2]
+        //                                     }
         ch_bam_ref2 = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
-                                            }.groupTuple(by:0).map { meta, bam, ref ->
-                                            def bam1 = bam[0].name.toString().split('/').last().split('_')[2]
-                                            def bam2 = bam[1].name.toString().split('/').last().split('_')[2]
-                                            bam1.contain("CTL") ? bam1: bam2 } 
-                                            }.view()
+                                            }.groupTuple(by:0).flatten().branch {
+                                                ctl: it.contains('_CTL_')
+                                            }
+        ch_bam_ref2.ctl.view{ "$it is ctl" }
     }
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
