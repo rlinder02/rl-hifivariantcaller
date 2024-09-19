@@ -79,9 +79,9 @@ workflow HIFIVARIANTCALLER {
                                             }.groupTuple(by:0).map { meta, bam, ref ->
                                             def bam1 = bam[0].name.toString().split('/').last().split('_')[2]
                                             def bam2 = bam[1].name.toString().split('/').last().split('_')[2]
-                                            def ctl_bam = bam.findAll {it.contains('CTL')}
+                                            def ctl_bam = bam.filter {it.contains('CTL')}
                                             // bbam = bam2.contains('CTL') ? 0: 1
-                                            bam
+                                            ctl_bam
                                             }.view()
     }
     ch_versions = Channel.empty()
