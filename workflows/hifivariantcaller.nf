@@ -76,10 +76,15 @@ workflow HIFIVARIANTCALLER {
         ch_bam_ref2 = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
-                                            }.groupTuple(by:0).filter { meta, bam, ref ->
-                                            // def bam1 = bam[0].name.toString().split('/').last().split('_')[2]
-                                            // def bam2 = bam[1].name.toString().split('/').last().split('_')[2]
-                                            bam[0]}.view()
+                                            }.groupTuple(by:0).map { meta, bam, ref ->
+                                            def bam1 = bam[0].name.toString().split('/').last().split('_')[2]
+                                            def bam2 = bam[1].name.toString().split('/').last().split('_')[2]
+                                            if bam1 == "CTL" {
+                                                return [bam[1], bam[0]]
+                                            } else {
+                                                return [bam[0], bam[1]]
+                                            }
+                                            }.view()
     }
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
