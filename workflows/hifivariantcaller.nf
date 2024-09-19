@@ -76,13 +76,11 @@ workflow HIFIVARIANTCALLER {
         ch_bam_ref2 = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
-                                            }.groupTuple(by:0).flatten().view()
-                                            
-                                            // map { items ->
-                                            // def sortedItems = items.sort { tuple ->
-                                            // tuple[0].contains('CTL') ? 0: 1 }
-                                            // sortedItems
-                                            // }.view()
+                                            }.groupTuple(by:0).map { meta, bam, ref ->
+                                            def sortedItems = bam.sort { tuple ->
+                                            tuple[0].contains('CTL') ? 0: 1 }
+                                            sortedItems
+                                            }.view()
     }
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
