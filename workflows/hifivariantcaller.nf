@@ -80,9 +80,9 @@ workflow HIFIVARIANTCALLER {
                                             def bam1 = bam[0].name.toString().split('/').last().split('_')[2]
                                             def bam2 = bam[1].name.toString().split('/').last().split('_')[2]
                                             if bam1 == "CTL" {
-                                                return [bam[1], bam[0]]
+                                                return tuple(bam[1], bam[0])
                                             } else {
-                                                return [bam[0], bam[1]]
+                                                return tuple(bam[0], bam[1])
                                             }
                                             }.view()
     }
