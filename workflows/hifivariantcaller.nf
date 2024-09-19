@@ -77,8 +77,7 @@ workflow HIFIVARIANTCALLER {
                                             meta = meta.id
                                             [meta, bam , ref]
                                             }.groupTuple(by:0).map { meta, bam, ref ->
-                                            bam.sort { tuple ->
-                                            tuple[0].contains('_CTL_') }
+                                            bam.sort()
                                             bam
                                             }.view()
     }
