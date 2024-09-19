@@ -1,5 +1,5 @@
 process ALIGN {
-    tag "$meta.id"
+    tag "${meta.id}.${meta.type}"
     label 'process_medium'
 
     conda "bioconda::pbmm2=1.13.1"
@@ -11,15 +11,16 @@ process ALIGN {
     tuple val(meta), path(bam), path(fasta)
 
     output:
-    tuple val(meta), path("*.sorted.bam"), emit: bam
-    path "versions.yml"                  , emit: versions
+    tuple val(meta), path("*.sorted.bam")    , emit: bam
+    tuple val(meta), path("*.sorted.bam.bai"), emit: bai
+    path "versions.yml"                      , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}.${meta.type}"
     """
     pbmm2 \\
         align \\

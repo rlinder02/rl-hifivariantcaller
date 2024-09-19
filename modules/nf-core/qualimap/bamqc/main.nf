@@ -1,5 +1,5 @@
 process QUALIMAP_BAMQC {
-    tag "$meta.id"
+    tag "${meta.id}.${meta.type}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -19,7 +19,7 @@ process QUALIMAP_BAMQC {
 
     script:
     def args = task.ext.args   ?: ''
-    prefix   = task.ext.prefix ?: "${meta.id}"
+    prefix   = task.ext.prefix ?: "${meta.id}.${meta.type}"
     def memory = (task.memory.mega*0.8).intValue() + 'M'
     def strandedness = 'non-strand-specific'
     """

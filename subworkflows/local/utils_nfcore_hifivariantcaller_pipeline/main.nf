@@ -79,11 +79,11 @@ workflow PIPELINE_INITIALISATION {
     Channel
         .fromSamplesheet("input")
         .map {
-            meta, tx_bam, ctl_bam, ind_fasta, ref_fasta, chain ->
+            meta, tx_bam, ctl_bam, ind_fasta, ref_fasta, ref_fai, chain ->
                 if (!ctl_bam) {
-                    return [ meta, tx_bam, ind_fasta, ref_fasta, chain ]
+                    return [ meta, tx_bam, ind_fasta, ref_fasta, ref_fai, chain ]
                 } else {
-                    return [ meta, tx_bam, ctl_bam, ind_fasta, ref_fasta, chain ]
+                    return [ meta, tx_bam, ctl_bam, ind_fasta, ref_fasta, ref_fai, chain ]
                 }
         }
         .set { ch_samplesheet }

@@ -41,6 +41,13 @@
                 "pattern": "^\\S+\\.f(ast)?a$",
                 "errorMessage": "Fasta file for the reference genome to use as a source of annotations must be provided, cannot contain spaces and must have extension '.fa' or '.fasta'"
             },
+            "ref_fai": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f(ast)?a.fai$",
+                "errorMessage": "Chain file for lifting over the individual genome coordinates to reference genome coordinates for annotaiton must be provided, cannot contain spaces and must have extension '.chain'"
+            },
             "chain": {
                 "type": "string",
                 "format": "file-path",
@@ -49,6 +56,6 @@
                 "errorMessage": "Chain file for lifting over the individual genome coordinates to reference genome coordinates for annotaiton must be provided, cannot contain spaces and must have extension '.chain'"
             }
         },
-        "required": ["sample", "tx_bam", "ind_fasta", "ref_fasta", "chain"]
+        "required": ["sample", "tx_bam", "ind_fasta", "ref_fasta", "ref_fai", "chain"]
     }
 }

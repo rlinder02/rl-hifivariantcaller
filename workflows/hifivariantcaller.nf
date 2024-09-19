@@ -23,19 +23,91 @@ workflow HIFIVARIANTCALLER {
     ch_samplesheet // channel: samplesheet read in from --input
 
     main:
+    // Need to create additional channels to accomodate the "type" meta being added below on the fly 
 
+    ch_tx_bam = ch_samplesheet.map { meta, tx, ctl, ind, ref, fai, chain -> [meta, tx] }
+    ch_tx_bam = ch_tx_bam.map { meta, path ->  
+                                meta = meta + [type:'treatment']
+                                [meta, path]
+                                }
+    ch_ind_genome = ch_samplesheet.map { meta, tx, ctl, ind, ref, fai, chain -> [meta, ind] }
+    ch_ind_genome_tx = ch_ind_genome.map { meta, path ->  
+                                meta = meta + [type:'treatment']
+                                [meta, path]
+                                }
+    ch_ref_genome = ch_samplesheet.map { meta, tx, ctl, ind, ref, fai, chain -> [meta, ref] }
+    ch_ref_genome_fai = ch_samplesheet.map { meta, tx, ctl, ind, ref, fai, chain -> [meta, fai] }
+    ch_ref_genome_tx = ch_ref_genome.map { meta, path ->  
+                                meta = meta + [type:'treatment']
+                                [meta, path]
+                                }
+    ch_ref_fai_tx = ch_ref_genome_fai.map { meta, path ->  
+                                meta = meta + [type:'treatment']
+                                [meta, path]
+                                }
+    ch_tx_bam_ind_genome = ch_tx_bam.combine(ch_ind_genome_tx,by:0)
+    if (params.treatment_only) {
+        ch_ctl_bam = Channel.of("/")
+        ch_bam_ref = ch_tx_bam_ind_genome
+    } else {
+        ch_ctl_bam = ch_samplesheet.map { meta, tx, ctl, ind, ref, fai, chain -> [meta, ctl] }
+        ch_ctl_bam = ch_ctl_bam.map { meta, path ->  
+                                meta = meta + [type:'control']
+                                [meta, path]
+                                }
+        ch_ind_genome_ctl = ch_ind_genome.map { meta, path ->  
+                                meta = meta + [type:'control']
+                                [meta, path]
+                                }
+        ch_ref_genome_ctl = ch_ref_genome.map { meta, path ->  
+                                meta = meta + [type:'control']
+                                [meta, path]
+                                }
+        ch_ref_fai_ctl= ch_ref_genome_fai.map { meta, path ->  
+                                meta = meta + [type:'control']
+                                [meta, path]
+                                }
+        ch_ctl_bam_ind_genome = ch_ctl_bam.combine(ch_ind_genome_ctl,by:0)
+        ch_bam_ref = ch_tx_bam_ind_genome.mix(ch_ctl_bam_ind_genome)
+        ch_bam_ref.view()
+        ch_test = ch_bam_ref.map { meta, bam, ref -> 
+                                            meta = meta.id
+                                            [meta, bam , ref]
+                                            }.groupTuple(by:0).view()
+        ch_test2 = ch_bam_ref.groupTuple(by:0[0]).view()
+    }
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
+    
+    
+
     //
     // SUBWORKFLOW: Align HiFi reads to individual-specific genome and run QC
     //
     ALIGNMENT (
-        ch_samplesheet
+        ch_bam_ref
     )
 
     ALIGNMENT.out.bam_qc.map {it[1]}.view()
     ch_multiqc_files = ch_multiqc_files.mix(ALIGNMENT.out.bam_qc.map {it[1]})
-    ch_versions = ch_versions.mix(ALIGNMENT.out.versions.first())
+    ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
+
+    // combine bam and bai files from same sample 
+
+    ch_bam_bai = ALIGNMENT.out.bam.combine(ALIGNMENT.out.bai, by:0)
+    // if (params.treatment_only) {
+    //     ch_all_bam_bai = ch_bam_bai
+    // } else {
+    //     ch_bam_bai_flat = ch_bam_bai.transpose()
+
+    //
+    // SUBWORKFLOW: Call variants in tumor/normal mode
+    //
+    // VARIANTCALLTN (
+    //     ALIGNMENT.out.bam,
+    //     ALIGNMENT.out.bai,
+    //     ch_samplesheet
+    // )
 
     //
     // Collate and save software versions
