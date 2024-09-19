@@ -70,7 +70,10 @@ workflow HIFIVARIANTCALLER {
         ch_ctl_bam_ind_genome = ch_ctl_bam.combine(ch_ind_genome_ctl,by:0)
         ch_bam_ref = ch_tx_bam_ind_genome.mix(ch_ctl_bam_ind_genome)
         //ch_bam_ref.view()
-        def custom_sort = {item1,item2 -> item2.name <=> item1.name}
+        def searchString = 'CTL'
+        // def custom_sort = {item1,item2 -> item2.name <=> item1.name}
+        def custom_sort = {path -> path.contains(searchString) ? 1: 0}
+
         ch_test = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
