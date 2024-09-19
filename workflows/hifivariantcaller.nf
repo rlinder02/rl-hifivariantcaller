@@ -74,7 +74,7 @@ workflow HIFIVARIANTCALLER {
                                             meta = meta.id
                                             [meta, bam , ref]
                                             }.groupTuple(by:0).view()
-        ch_test2 = ch_bam_ref.groupTuple(by:0).view()
+        //ch_test2 = ch_bam_ref.groupTuple(by:0).view()
     }
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
@@ -88,7 +88,7 @@ workflow HIFIVARIANTCALLER {
         ch_bam_ref
     )
 
-    ALIGNMENT.out.bam_qc.map {it[1]}.view()
+    //ALIGNMENT.out.bam_qc.map {it[1]}.view()
     ch_multiqc_files = ch_multiqc_files.mix(ALIGNMENT.out.bam_qc.map {it[1]})
     ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
 
