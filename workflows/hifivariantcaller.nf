@@ -71,7 +71,8 @@ workflow HIFIVARIANTCALLER {
         ch_bam_ref = ch_tx_bam_ind_genome.mix(ch_ctl_bam_ind_genome)
         //def custom_sort = { item -> item.contains('CTL') ? 1: 0 }
         def custom_sort = { item1,item2 -> item1.contains('CTL') ? 1: 0
-                                            item2.contains('CTL') ? 1: 0 }
+                                            item2.contains('CTL') ? 1: 0 
+                                            }.view()
         ch_bam_ref2 = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
