@@ -78,8 +78,7 @@ workflow HIFIVARIANTCALLER {
                                             [meta, bam , ref]
                                             }.groupTuple(by:0).map { meta, bam, ref ->
                                             def sortedItems = bam.sort { tuple ->
-                                            tuple[0].contains('CTL') ? 0: 1
-                                            tuple[1].contains('CTL') ? 0: 1 }
+                                            tuple[0].contains('_CTL_') }
                                             sortedItems
                                             }.view()
     }
