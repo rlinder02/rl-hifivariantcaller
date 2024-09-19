@@ -69,12 +69,13 @@ workflow HIFIVARIANTCALLER {
                                 }
         ch_ctl_bam_ind_genome = ch_ctl_bam.combine(ch_ind_genome_ctl,by:0)
         ch_bam_ref = ch_tx_bam_ind_genome.mix(ch_ctl_bam_ind_genome)
-        ch_bam_ref.view()
-        ch_test = ch_bam_ref.map { meta, bam, ref -> 
-                                            meta = meta.id
-                                            [meta, bam , ref]
-                                            }.groupTuple(by:0).view()
-        //ch_test2 = ch_bam_ref.groupTuple(by:0).view()
+        //ch_bam_ref.view()
+        //ch_test = ch_bam_ref.map { meta, bam, ref -> 
+                                            // meta = meta.id
+                                            // type = meta.type
+                                            // [meta, type, bam , ref]
+                                            // }.groupTuple(by:0).view()
+        ch_test2 = ch_bam_ref.transpose().view()
     }
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
