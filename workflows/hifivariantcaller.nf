@@ -77,8 +77,8 @@ workflow HIFIVARIANTCALLER {
                                             meta = meta.id
                                             [meta, bam , ref]
                                             }.groupTuple(by:0).map { meta, bam, ref ->
-                                            def bam1 = bam[0].name.toString().split('/').last().split('_').third()
-                                            def bam2 = bam[1].name.toString().split('/').last().split('_').third()
+                                            def bam1 = bam[0].name.toString().split('/').last().split('_')[2]
+                                            def bam2 = bam[1].name.toString().split('/').last().split('_')[2]
                                             bam1 == 'CTL' ? 0: 1
                                             bam2 == 'CTL' ? 0: 1
                                             [bam1, bam2] 
