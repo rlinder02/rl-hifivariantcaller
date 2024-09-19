@@ -79,7 +79,7 @@ workflow HIFIVARIANTCALLER {
                                             }.groupTuple(by:0).map { meta, bam, ref ->
                                             bam.sort { tuple ->
                                             tuple[0].contains('_CTL_') }
-                                            [bam]
+                                            bam
                                             }.view()
     }
     ch_versions = Channel.empty()
