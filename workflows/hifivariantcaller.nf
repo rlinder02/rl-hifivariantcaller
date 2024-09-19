@@ -72,8 +72,7 @@ workflow HIFIVARIANTCALLER {
         //ch_bam_ref.view()
         ch_test = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
-                                            type = meta.type
-                                            [meta, type, bam , ref]
+                                            [meta, bam , ref]
                                             }.groupTuple(by:0, sort:true).view()
     }
     ch_versions = Channel.empty()
