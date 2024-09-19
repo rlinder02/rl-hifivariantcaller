@@ -72,7 +72,7 @@ workflow HIFIVARIANTCALLER {
         //ch_bam_ref.view()
         def searchString = 'CTL'
         // def custom_sort = {item1,item2 -> item2.name <=> item1.name}
-        def custom_sort = {path -> path.contains(searchString) ? 1: 0}
+        def custom_sort = {path -> path.contains(searchString) ? 0: 1}
 
         ch_test = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
