@@ -70,10 +70,15 @@ workflow HIFIVARIANTCALLER {
         ch_ctl_bam_ind_genome = ch_ctl_bam.combine(ch_ind_genome_ctl,by:0)
         ch_bam_ref = ch_tx_bam_ind_genome.mix(ch_ctl_bam_ind_genome)
         //ch_bam_ref.view()
+        def custom_sort = {item1, item2 -> 
+            def matcher1 = item1.name =~ /(?!CTL).{3}/
+            def matcher2 = item2.name =~ /[CTL]/
+            return tuple(matcher1, matcher2)
+            }
         ch_test = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
-                                            }.groupTuple(by:0, sort:true).view()
+                                            }.groupTuple(by:0, sort:custom_sort).view()
     }
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
