@@ -69,58 +69,15 @@ workflow HIFIVARIANTCALLER {
                                 }
         ch_ctl_bam_ind_genome = ch_ctl_bam.combine(ch_ind_genome_ctl,by:0)
         ch_bam_ref = ch_tx_bam_ind_genome.mix(ch_ctl_bam_ind_genome)
-        //def custom_sort = { item -> item.contains('CTL') ? 1: 0 }
-        // def custom_sort = { item1,item2 -> item1.contains('CTL') ? 1: 0
-        //                                     item2.contains('CTL') ? 1: 0 
-        //                                     }
-        // .map { meta, bam, ref ->
-        //                                     def bam1 = bam[0].name.toString().split('/').last().split('_')[2]
-        //                                     def bam2 = bam[1].name.toString().split('/').last().split('_')[2]
-        //                                     }
-        // branch {
-        //                                         ctl: it.contains('_CTL_')
-        //                                     }
-        // { group -> group.value.sort { a, b ->
-        //                                     (a.contains('string1') ? 1 : 0) - (b.contains('string1') ? 1 : 0)
-        //                                     }
-        // def bam1 = bam[0].name.toString().contains('CTL') ? 1: 0
-        //                                     def bam2 = bam[1].name.toString().contains('CTL') ? 1: 0
-
-                                    // branch { 
-                                            //     ctl_bam: it.contains('_CTL_')
-                                            //     tx_bam: !it.contains('_CTL_')
-                                            // }
-
+        // need to specify custome sort function that converts items to a string, assigns a value of 0 if the string contains 'CTL' in this case, or a 1 otherwise (to the tx sample), then sorts in ascending order using the spaceship comparator operation
         ch_bam_ref2 = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
-                                            }.groupTuple(by:0, sort: {bam1,bam2 -> 
+                                            }.groupTuple(by:0, sort: { bam1,bam2 -> 
                                                      def bam1_sort = bam1.toString().contains('CTL') ? 0: 1 
                                                      def bam2_sort = bam2.toString().contains('CTL') ? 0: 1
-                                                     println(bam1_sort)
-                                                     println(bam2_sort)
-                                                     bam1_sort.value <=> bam2_sort.value   })
+                                                     bam1_sort.value <=> bam2_sort.value } )
         ch_bam_ref2.view()
-        //ch_bam_ref2.tx.view()
-        //ch_bam_ref2.other.view()
-        // Channel.of(1, 2, 3, 40, 50)
-        //     .branch {
-        //         small: it < 10
-        //         large: it < 50
-        //         other: true
-        //     }
-        //     .set { result }
-        // result.small.view()
-        // ch_bam_ref2.map {
-        //     bam -> 
-        //     def bam1 = bam[0].name.toString()
-        //     def bam2 = bam[1].name.toString()
-        //     def bam_ch = [bam1, bam2]
-        //     ctl: bam_ch.contains('CTL')
-        // }.ctl.view()
-        //ch_bam_ref2.ctl_bam.view()
-        //ch_bam_ref2.tx_bam.view()
-        //ch_bam_ref2.ctl.view{ "$it is ctl" }
     }
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
