@@ -83,7 +83,10 @@ workflow HIFIVARIANTCALLER {
         ch_bam_ref2 = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
-                                            }.groupTuple(by:0).flatten().collect().view()
+                                            }.groupTuple(by:0).collect { group -> group.value.sort { a, b ->
+                                            (a.contains('string1') ? 1 : 0) - (b.contains('string1') ? 1 : 0)
+                                            }
+                                            }.view()
         //ch_bam_ref2.ctl.view{ "$it is ctl" }
     }
     ch_versions = Channel.empty()
