@@ -69,20 +69,9 @@ workflow HIFIVARIANTCALLER {
                                 }
         ch_ctl_bam_ind_genome = ch_ctl_bam.combine(ch_ind_genome_ctl,by:0)
         ch_bam_ref = ch_tx_bam_ind_genome.mix(ch_ctl_bam_ind_genome)
-        // need to specify custome sort function that converts items to a string, assigns a value of 0 if the string contains 'CTL' in this case, or a 1 otherwise (to the tx sample), then sorts in ascending order using the spaceship comparator operation
-        ch_bam_ref2 = ch_bam_ref.map { meta, bam, ref -> 
-                                            meta = meta.id
-                                            [meta, bam , ref]
-                                            }.groupTuple(by:0, sort: { bam1,bam2 -> 
-                                                     def bam1_sort = bam1.toString().contains('CTL') ? 0: 1 
-                                                     def bam2_sort = bam2.toString().contains('CTL') ? 0: 1
-                                                     bam1_sort.value <=> bam2_sort.value } )
-        ch_bam_ref2.view()
     }
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
-    
-    
 
     //
     // SUBWORKFLOW: Align HiFi reads to individual-specific genome and run QC
@@ -91,17 +80,26 @@ workflow HIFIVARIANTCALLER {
         ch_bam_ref
     )
 
-    //ALIGNMENT.out.bam_qc.map {it[1]}.view()
     ch_multiqc_files = ch_multiqc_files.mix(ALIGNMENT.out.bam_qc.map {it[1]})
     ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
 
     // combine bam and bai files from same sample 
 
     ch_bam_bai = ALIGNMENT.out.bam.combine(ALIGNMENT.out.bai, by:0)
-    // if (params.treatment_only) {
-    //     ch_all_bam_bai = ch_bam_bai
-    // } else {
-    //     ch_bam_bai_flat = ch_bam_bai.transpose()
+
+    if (params.treatment_only) {
+        ch_all_bam_bai = ch_bam_bai
+    } else {
+        // need to specify custome sort function that converts items to a string, assigns a value of 0 if the string contains 'CTL' in this case, or a 1 otherwise (to the tx sample), then sorts in ascending order using the spaceship comparator operation, so the CTL sample will always be first in the tuple
+        ch_tx_ctl = ch_bam_bai.map { meta, bam, bai -> 
+                                            meta = meta.id
+                                            [meta, bam , ref]
+                                            }.groupTuple(by:0, sort: { bam1,bam2 -> 
+                                                     def bam1_sort = bam1.toString().contains('CTL') ? 0: 1 
+                                                     def bam2_sort = bam2.toString().contains('CTL') ? 0: 1
+                                                     bam1_sort.value <=> bam2_sort.value } )
+        ch_tx_ctl = .view()
+    }
 
     //
     // SUBWORKFLOW: Call variants in tumor/normal mode
