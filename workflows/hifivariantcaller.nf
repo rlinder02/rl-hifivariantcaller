@@ -98,8 +98,11 @@ workflow HIFIVARIANTCALLER {
                                             bam
                                             }
         ch_bam_ref2.branch {
-            bam ->
-            ctl: bam.contains('CTL')
+            bam -> 
+            def bam1 = bam[0].name.toString()
+            def bam2 = bam[1].name.toString()
+            def bam_ch = [bam1, bam2]
+            ctl: bam_ch.contains('CTL')
         }.ctl.view()
         //ch_bam_ref2.ctl_bam.view()
         //ch_bam_ref2.tx_bam.view()
