@@ -83,13 +83,13 @@ workflow HIFIVARIANTCALLER {
         // { group -> group.value.sort { a, b ->
         //                                     (a.contains('string1') ? 1 : 0) - (b.contains('string1') ? 1 : 0)
         //                                     }
+        // def bam1 = bam[0].name.toString().contains('CTL') ? 1: 0
+        //                                     def bam2 = bam[1].name.toString().contains('CTL') ? 1: 0
         ch_bam_ref2 = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
                                             }.groupTuple(by:0).map { meta, bam, ref -> 
-                                            def bam1 = bam[0].name.toString().contains('CTL') ? 1: 0
-                                            def bam2 = bam[1].name.toString().contains('CTL') ? 1: 0
-                                            [bam1, bam2]
+                                            [bam[0], bam[1]]
                                             }.view()
         //ch_bam_ref2.ctl.view{ "$it is ctl" }
     }
