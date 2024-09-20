@@ -86,6 +86,7 @@ workflow HIFIVARIANTCALLER {
     // combine bam and bai files from same sample 
 
     ch_bam_bai = ALIGNMENT.out.bam.combine(ALIGNMENT.out.bai, by:0)
+    ch_bam_bai.view()
 
     if (params.treatment_only) {
         ch_all_bam_bai = ch_bam_bai
