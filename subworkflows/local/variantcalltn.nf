@@ -8,9 +8,6 @@ workflow VARIANTCALLTN {
     ch_samplesheet
 
     main:
-    ch_bam_bai = ch_bam.combine(ch_bai,by:0)
-
-    // Need to maybe use the cross operator to combine the matched treatment/control bam_bai channels based on just the meta.id field (see the docs on cross)
 
     ch_versions = Channel.empty()
 

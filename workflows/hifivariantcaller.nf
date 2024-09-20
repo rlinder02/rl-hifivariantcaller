@@ -93,7 +93,7 @@ workflow HIFIVARIANTCALLER {
         // need to specify custome sort function that converts items to a string, assigns a value of 0 if the string contains 'CTL' in this case, or a 1 otherwise (to the tx sample), then sorts in ascending order using the spaceship comparator operation, so the CTL sample will always be first in the tuple
         ch_tx_ctl = ch_bam_bai.map { meta, bam, bai -> 
                                             meta = meta.id
-                                            [meta, bam , ref]
+                                            [meta, bam , bai]
                                             }.groupTuple(by:0, sort: { bam1,bam2 -> 
                                                      def bam1_sort = bam1.toString().contains('CTL') ? 0: 1 
                                                      def bam2_sort = bam2.toString().contains('CTL') ? 0: 1
