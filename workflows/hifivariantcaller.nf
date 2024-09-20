@@ -96,7 +96,11 @@ workflow HIFIVARIANTCALLER {
                                             [meta, bam , ref]
                                             }.groupTuple(by:0).map { meta, bam, ref -> 
                                             bam
-                                            }.view()
+                                            }
+        ch_bam_ref2.branch {
+            bam ->
+            ctl: bam.contains('CTL')
+        }.ctl.view()
         //ch_bam_ref2.ctl_bam.view()
         //ch_bam_ref2.tx_bam.view()
         //ch_bam_ref2.ctl.view{ "$it is ctl" }
