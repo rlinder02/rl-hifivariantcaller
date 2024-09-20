@@ -85,16 +85,19 @@ workflow HIFIVARIANTCALLER {
         //                                     }
         // def bam1 = bam[0].name.toString().contains('CTL') ? 1: 0
         //                                     def bam2 = bam[1].name.toString().contains('CTL') ? 1: 0
+
+                                    // branch { 
+                                            //     ctl_bam: it.contains('_CTL_')
+                                            //     tx_bam: !it.contains('_CTL_')
+                                            // }
+
         ch_bam_ref2 = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
                                             }.groupTuple(by:0).map { meta, bam, ref -> 
                                             bam
-                                            }.branch { 
-                                                ctl_bam: it.contains('_CTL_')
-                                                tx_bam: !it.contains('_CTL_')
-                                            }
-        ch_bam_ref2.ctl_bam.view()
+                                            }.view()
+        //ch_bam_ref2.ctl_bam.view()
         //ch_bam_ref2.tx_bam.view()
         //ch_bam_ref2.ctl.view{ "$it is ctl" }
     }
