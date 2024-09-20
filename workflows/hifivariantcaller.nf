@@ -101,8 +101,8 @@ workflow HIFIVARIANTCALLER {
                                                 other: true
                                             }
         ch_bam_ref2.ctl.view()
-        ch_bam_ref2.tx.view()
-        ch_bam_ref2.other.view()
+        //ch_bam_ref2.tx.view()
+        //ch_bam_ref2.other.view()
         Channel.of(1, 2, 3, 40, 50)
             .branch {
                 small: it < 10
