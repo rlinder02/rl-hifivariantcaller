@@ -99,8 +99,17 @@ workflow HIFIVARIANTCALLER {
                                             }.flatten().branch {
                                                 ctl: it.contains('_CTL_')
                                                 tx: !it.contains('_CTL_')
-                                            }.ctl.view()
-        Channel.of(1, 2, 3, 40, 50).view()
+                                                other: true
+                                            }
+        ch_bam_ref2.other.view()
+        Channel.of(1, 2, 3, 40, 50)
+            .branch {
+                small: it < 10
+                large: it < 50
+                other: true
+            }
+            .set { result }
+        result.small.view()
         // ch_bam_ref2.map {
         //     bam -> 
         //     def bam1 = bam[0].name.toString()
