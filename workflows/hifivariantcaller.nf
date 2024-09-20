@@ -96,7 +96,10 @@ workflow HIFIVARIANTCALLER {
                                             [meta, bam , ref]
                                             }.groupTuple(by:0).map { meta, bam, ref -> 
                                             bam
-                                            }.flatten().view()
+                                            }.flatten().branch {
+                                                ctl: it.contains('_CTL_')
+                                                tx: !it.contains('_CTL_')
+                                            }.ctl.view()
         Channel.of(1, 2, 3, 40, 50).view()
         // ch_bam_ref2.map {
         //     bam -> 
