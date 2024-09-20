@@ -1,6 +1,6 @@
 process ALIGN {
     tag "${meta.id}.${meta.type}"
-    label 'process_medium'
+    label 'process_high'
 
     conda "bioconda::pbmm2=1.13.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

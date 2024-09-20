@@ -86,7 +86,6 @@ workflow HIFIVARIANTCALLER {
     // combine bam and bai files from same sample 
 
     ch_bam_bai = ALIGNMENT.out.bam.combine(ALIGNMENT.out.bai, by:0)
-    ch_bam_bai.view()
 
     if (params.treatment_only) {
         ch_all_bam_bai = ch_bam_bai
@@ -96,8 +95,8 @@ workflow HIFIVARIANTCALLER {
                                             meta = meta.id
                                             [meta, bam , bai]
                                             }.groupTuple(by:0, sort: { bam1,bam2 -> 
-                                                     def bam1_sort = bam1.toString().contains('CTL') ? 0: 1 
-                                                     def bam2_sort = bam2.toString().contains('CTL') ? 0: 1
+                                                     def bam1_sort = bam1.toString().contains('control') ? 0: 1 
+                                                     def bam2_sort = bam2.toString().contains('control') ? 0: 1
                                                      bam1_sort.value <=> bam2_sort.value } )
         ch_tx_ctl.view()
     }
