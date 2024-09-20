@@ -94,23 +94,18 @@ workflow HIFIVARIANTCALLER {
         ch_bam_ref2 = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
-                                            }.groupTuple(by:0).flatten().branch { it -> 
-                                                def path = it.toString()
-                                                ctl: path.contains('_CTL')
-                                                tx: path.contains('_APP')
-                                                meta_data: true
-                                            }
-        ch_bam_ref2.meta_data.view()
+                                            }.groupTuple(by:0, sort:true)
+        ch_bam_ref2.view()
         //ch_bam_ref2.tx.view()
         //ch_bam_ref2.other.view()
-        Channel.of(1, 2, 3, 40, 50)
-            .branch {
-                small: it < 10
-                large: it < 50
-                other: true
-            }
-            .set { result }
-        result.small.view()
+        // Channel.of(1, 2, 3, 40, 50)
+        //     .branch {
+        //         small: it < 10
+        //         large: it < 50
+        //         other: true
+        //     }
+        //     .set { result }
+        // result.small.view()
         // ch_bam_ref2.map {
         //     bam -> 
         //     def bam1 = bam[0].name.toString()
