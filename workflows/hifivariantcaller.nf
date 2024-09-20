@@ -97,8 +97,9 @@ workflow HIFIVARIANTCALLER {
                                             }.groupTuple(by:0).map { meta, bam, ref -> 
                                             bam
                                             }.flatten().branch { it -> 
-                                                ctl: it.contains('_CTL_')
-                                                tx: !it.contains('_CTL_')
+                                                def bam = bam.name.toString()
+                                                ctl: bam.contains('_CTL_')
+                                                tx: !bam.contains('_CTL_')
                                                 other: true
                                             }
         ch_bam_ref2.ctl.view()
