@@ -94,7 +94,10 @@ workflow HIFIVARIANTCALLER {
         ch_bam_ref2 = ch_bam_ref.map { meta, bam, ref -> 
                                             meta = meta.id
                                             [meta, bam , ref]
-                                            }.groupTuple(by:0, sort:true)
+                                            }.groupTuple(by:0, sort: {bam1,bam2 -> 
+                                                     def bam1_sort = bam1.contains('CTL') ? 1: 0 
+                                                     def bam2_sort = bam2.contains('CTL') ? 1: 0
+                                                     bam1_sort.value <=> bam2_sort.value   })
         ch_bam_ref2.view()
         //ch_bam_ref2.tx.view()
         //ch_bam_ref2.other.view()
