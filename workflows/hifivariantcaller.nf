@@ -97,6 +97,8 @@ workflow HIFIVARIANTCALLER {
                                             }.groupTuple(by:0, sort: {bam1,bam2 -> 
                                                      def bam1_sort = bam1.contains('CTL') ? 1: 0 
                                                      def bam2_sort = bam2.contains('CTL') ? 1: 0
+                                                     println(bam1_sort)
+                                                     println(bam2_sort)
                                                      bam1_sort.value <=> bam2_sort.value   })
         ch_bam_ref2.view()
         //ch_bam_ref2.tx.view()
