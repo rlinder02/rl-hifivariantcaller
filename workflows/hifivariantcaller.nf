@@ -97,6 +97,7 @@ workflow HIFIVARIANTCALLER {
                                             }.groupTuple(by:0).map { meta, bam, ref -> 
                                             bam
                                             }.view()
+        Channel.of(1, 2, 3, 40, 50).view()
         // ch_bam_ref2.map {
         //     bam -> 
         //     def bam1 = bam[0].name.toString()
