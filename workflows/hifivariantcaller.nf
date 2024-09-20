@@ -98,7 +98,7 @@ workflow HIFIVARIANTCALLER {
                                                 def path = it.toString()
                                                 ctl: path.contains('_CTL')
                                                 tx: path.contains('_APP')
-                                                meta_data: path == meta.id
+                                                meta_data: true
                                             }
         ch_bam_ref2.tx.view()
         //ch_bam_ref2.tx.view()
