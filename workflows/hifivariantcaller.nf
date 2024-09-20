@@ -98,7 +98,7 @@ workflow HIFIVARIANTCALLER {
                                                      def bam1_sort = bam1.toString().contains('CTL') ? 0: 1 
                                                      def bam2_sort = bam2.toString().contains('CTL') ? 0: 1
                                                      bam1_sort.value <=> bam2_sort.value } )
-        ch_tx_ctl = .view()
+        ch_tx_ctl.view()
     }
 
     //
