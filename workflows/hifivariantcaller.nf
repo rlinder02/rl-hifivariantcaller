@@ -97,8 +97,8 @@ workflow HIFIVARIANTCALLER {
                                             }.groupTuple(by:0).flatten().branch { it -> 
                                                 def path = it.toString()
                                                 ctl: path.contains('_CTL')
-                                                tx: !path.contains('_CTL')
-                                                other: true
+                                                tx: path.contains('_APP')
+                                                meta_data: path == meta.id
                                             }
         ch_bam_ref2.tx.view()
         //ch_bam_ref2.tx.view()
