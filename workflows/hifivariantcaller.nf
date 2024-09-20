@@ -100,7 +100,7 @@ workflow HIFIVARIANTCALLER {
                                                 tx: path.contains('_APP')
                                                 meta_data: true
                                             }
-        ch_bam_ref2.tx.view()
+        ch_bam_ref2.meta_data.view()
         //ch_bam_ref2.tx.view()
         //ch_bam_ref2.other.view()
         Channel.of(1, 2, 3, 40, 50)
