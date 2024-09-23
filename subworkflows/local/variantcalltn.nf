@@ -3,7 +3,7 @@ include { CLAIRSTN          } from '../../modules/local/clairstn'
 workflow VARIANTCALLTN {
 
     take:
-    ch_bams_bai_ind_refs       // channel: [ val(meta), [ ctl_bam ], [ tx_bam ], [ ctl_bai ], [ tx_bai ], [ ind_fasta ], [ ind_fasta_fai ]] 
+    ch_bams_bai_ind_refs       // channel: [ val(meta), [ ctl_bam, tx_bam ], [ ctl_bai, tx_bai ], [ ind_fasta ], [ ind_fasta_fai ]] 
     
     main:
     ch_versions = Channel.empty()

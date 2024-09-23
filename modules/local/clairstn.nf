@@ -8,7 +8,7 @@ process CLAIRSTN {
         'docker.io/hkubal/clairs:v0.3.1' }"
 
     input:
-    tuple val(meta), path(ctl_bam), path(tx_bam), path(ctl_bai), path(tx_bai), path(ind_fasta), path(ind_fasta_fai)
+    tuple val(meta), path(bam), path(bai), path(ind_fasta), path(ind_fasta_fai)
 
     output:
     tuple val(meta), path("${prefix}/snv.vcf.gz")      , emit: snv_vcf
@@ -25,8 +25,8 @@ process CLAIRSTN {
     def prefix = task.ext.prefix ?: "${meta}"
     """
     run_clairs \\
-	    --normal_bam_fn $ctl_bam \\
-	    --tumor_bam_fn $tx_bam \\
+	    --normal_bam_fn $bam[0] \\
+	    --tumor_bam_fn $bam[1] \\
         --ref_fn $ind_fasta \\
         --threads $task.cpus \\
         --platform hifi_revio \\
