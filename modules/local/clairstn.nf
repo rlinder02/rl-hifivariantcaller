@@ -23,12 +23,10 @@ process CLAIRSTN {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta}"
-    def ctl_bam = ${bam[0]}
-    def tx_bam = ${bam[1]}
     """
     run_clairs \\
-	    --normal_bam_fn $ctl_bam \\
-	    --tumor_bam_fn $tx_bam \\
+	    --normal_bam_fn ${bam[0]} \\
+	    --tumor_bam_fn ${bam[1]} \\
         --ref_fn $ind_fasta \\
         --threads $task.cpus \\
         --platform hifi_revio \\
