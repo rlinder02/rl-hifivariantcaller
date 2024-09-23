@@ -95,6 +95,9 @@ workflow HIFIVARIANTCALLER {
 
     if (params.treatment_only) {
         ch_all_bam_bai = ch_bam_bai
+        // complete the below line later 
+        // ch_all_bam_bai_ind_ref = 
+
     } else {
         // need to specify custome sort function that converts items to a string, assigns a value of 0 if the string contains 'CTL' in this case, or a 1 otherwise (to the tx sample), then sorts in ascending order using the spaceship comparator operation, so the CTL sample will always be first in the tuple
         ch_all_bam_bai = ch_bam_bai.map { meta, bam, bai -> 
@@ -104,17 +107,16 @@ workflow HIFIVARIANTCALLER {
                                                      def bam1_sort = bam1.toString().contains('control') ? 0: 1 
                                                      def bam2_sort = bam2.toString().contains('control') ? 0: 1
                                                      bam1_sort.value <=> bam2_sort.value } )
-        ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ind_genome_fai, by:0).view()
+        ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ind_genome_fai, by:0)
     }
     
     //
     // SUBWORKFLOW: Call variants in tumor/normal mode
     //
-    // VARIANTCALLTN (
-    //     ch_all_bam_bai,
-    //     ch_ind_genome_fai
-    // )
+    VARIANTCALLTN ( ch_all_bam_bai_ind_ref )
 
+    ch_versions = ch_versions.mix(VARIANTCALLTN.out.versions)
+    
     //
     // Collate and save software versions
     //

@@ -1,6 +1,6 @@
 process CLAIRSTN {
-    tag "$meta.id"
-    label 'process_medium'
+    tag "$meta"
+    label 'process_high'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -8,30 +8,38 @@ process CLAIRSTN {
         'docker.io/hkubal/clairs:v0.3.1' }"
 
     input:
-    tuple val(meta), path(ctbam), path(bai)
+    tuple val(meta), path(ctl_bam), path(tx_bam), path(ctl_bai), path(tx_bai), path(ind_fasta), path(ind_fasta_fai)
 
     output:
-    tuple val(meta), path("*.bam"), emit: bam
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path("${prefix}/snv.vcf.gz")      , emit: snv_vcf
+    tuple val(meta), path("${prefix}/snv.vcf.gz.tbi")  , emit: snv_vcf_tbi
+    tuple val(meta), path("${prefix}/indel.vcf.gz")    , emit: indel_vcf
+    tuple val(meta), path("${prefix}/indel.vcf.gz.tbi"), emit: indel_vcf_tbi
+    path "versions.yml"                                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta}"
     """
-    samtools \\
-        sort \\
-        $args \\
-        -@ $task.cpus \\
-        -o ${prefix}.bam \\
-        -T $prefix \\
-        $bam
+    run_clairs \\
+	    --normal_bam_fn $ctl_bam \\
+	    --tumor_bam_fn $tx_bam \\
+        --ref_fn $ind_fasta \\
+        --threads $task.cpus \\
+        --platform hifi_revio \\
+        --output_dir $prefix \\
+        --sample_name $prefix \\
+        --snv_min_af 0.005 \\
+        --enable_indel_calling \\
+        --min_coverage 1 \\
+        $args	
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        clairstn: \$(samtools --version |& sed '1!d ; s/samtools //')
+        clairs: \$(run_clairs --version | sed 's/run_clairs //')
     END_VERSIONS
     """
 
@@ -39,11 +47,12 @@ process CLAIRSTN {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.bam
+    touch ${prefix}.snv.vcf.gz
+    touch ${prefix}.indel.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        clairstn: \$(samtools --version |& sed '1!d ; s/samtools //')
+        clairs: \$(run_clairs --version | sed 's/run_clairs //')
     END_VERSIONS
     """
 }
