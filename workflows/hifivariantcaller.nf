@@ -101,9 +101,8 @@ workflow HIFIVARIANTCALLER {
                                                      def bam1_sort = bam1.toString().contains('control') ? 0: 1 
                                                      def bam2_sort = bam2.toString().contains('control') ? 0: 1
                                                      bam1_sort.value <=> bam2_sort.value } )
-        ch_all_bam_bai.view()
     }
-    //ch_ind_genome_fai.view()
+    ch_ind_genome_fai.view()
     //
     // SUBWORKFLOW: Call variants in tumor/normal mode
     //
