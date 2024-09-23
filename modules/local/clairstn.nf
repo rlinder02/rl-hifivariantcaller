@@ -8,7 +8,7 @@ process CLAIRSTN {
         'docker.io/hkubal/clairs:v0.3.1' }"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta), path(ctbam), path(bai)
 
     output:
     tuple val(meta), path("*.bam"), emit: bam

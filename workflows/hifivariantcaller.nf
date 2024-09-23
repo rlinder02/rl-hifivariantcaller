@@ -25,18 +25,21 @@ workflow HIFIVARIANTCALLER {
     main:
     // Need to create additional channels to accomodate the "type" meta being added below on the fly 
 
-    ch_tx_bam = ch_samplesheet.map { meta, tx, ctl, ind, ref, fai, chain -> [meta, tx] }
+    ch_tx_bam = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, tx] }
     ch_tx_bam = ch_tx_bam.map { meta, path ->  
                                 meta = meta + [type:'treatment']
                                 [meta, path]
                                 }
-    ch_ind_genome = ch_samplesheet.map { meta, tx, ctl, ind, ref, fai, chain -> [meta, ind] }
+    ch_ind_genome = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ind] }
+    ch_ind_fasta_fai = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ind_fai] }
+    ch_ind_genome_fai = ch_ind_genome.combine(ch_ind_fasta_fai,by:0)
+
     ch_ind_genome_tx = ch_ind_genome.map { meta, path ->  
                                 meta = meta + [type:'treatment']
                                 [meta, path]
                                 }
-    ch_ref_genome = ch_samplesheet.map { meta, tx, ctl, ind, ref, fai, chain -> [meta, ref] }
-    ch_ref_genome_fai = ch_samplesheet.map { meta, tx, ctl, ind, ref, fai, chain -> [meta, fai] }
+    ch_ref_genome = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ref] }
+    ch_ref_genome_fai = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, fai] }
     ch_ref_genome_tx = ch_ref_genome.map { meta, path ->  
                                 meta = meta + [type:'treatment']
                                 [meta, path]
@@ -50,7 +53,7 @@ workflow HIFIVARIANTCALLER {
         ch_ctl_bam = Channel.of("/")
         ch_bam_ref = ch_tx_bam_ind_genome
     } else {
-        ch_ctl_bam = ch_samplesheet.map { meta, tx, ctl, ind, ref, fai, chain -> [meta, ctl] }
+        ch_ctl_bam = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ctl] }
         ch_ctl_bam = ch_ctl_bam.map { meta, path ->  
                                 meta = meta + [type:'control']
                                 [meta, path]
@@ -91,23 +94,22 @@ workflow HIFIVARIANTCALLER {
         ch_all_bam_bai = ch_bam_bai
     } else {
         // need to specify custome sort function that converts items to a string, assigns a value of 0 if the string contains 'CTL' in this case, or a 1 otherwise (to the tx sample), then sorts in ascending order using the spaceship comparator operation, so the CTL sample will always be first in the tuple
-        ch_tx_ctl = ch_bam_bai.map { meta, bam, bai -> 
+        ch_all_bam_bai = ch_bam_bai.map { meta, bam, bai -> 
                                             meta = meta.id
                                             [meta, bam , bai]
                                             }.groupTuple(by:0, sort: { bam1,bam2 -> 
                                                      def bam1_sort = bam1.toString().contains('control') ? 0: 1 
                                                      def bam2_sort = bam2.toString().contains('control') ? 0: 1
                                                      bam1_sort.value <=> bam2_sort.value } )
-        ch_tx_ctl.view()
+        ch_all_bam_bai.view()
     }
-
+    //ch_ind_genome_fai.view()
     //
     // SUBWORKFLOW: Call variants in tumor/normal mode
     //
     // VARIANTCALLTN (
-    //     ALIGNMENT.out.bam,
-    //     ALIGNMENT.out.bai,
-    //     ch_samplesheet
+    //     ch_all_bam_bai,
+    //     ch_ind_genome_fai
     // )
 
     //

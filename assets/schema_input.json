@@ -34,6 +34,13 @@
                 "pattern": "^\\S+\\.f(ast)?a$",
                 "errorMessage": "Fasta file for the assembly of the individual must be provided, cannot contain spaces and must have extension '.fa' or '.fasta'"
             },
+            "ind_fasta_fai": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f(ast)?a.fai$",
+                "errorMessage": "Fasta index file for the assembly of the individual must be provided, cannot contain spaces and must have extension '.fa.fai' or '.fasta.fai'"
+            },
             "ref_fasta": {
                 "type": "string",
                 "format": "file-path",
