@@ -14,7 +14,7 @@ process CLAIRSTN {
     tuple val(meta), path("${meta}/snv.vcf.gz")      , emit: snv_vcf
     tuple val(meta), path("${meta}/snv.vcf.gz.tbi")  , emit: snv_vcf_tbi
     tuple val(meta), path("${meta}/indel.vcf.gz")    , emit: indel_vcf
-    tuple val(meta), path("${meta}/indel.vcf.gz.catlscdtbi"), emit: indel_vcf_tbi
+    tuple val(meta), path("${meta}/indel.vcf.gz.tbi"), emit: indel_vcf_tbi
     path "versions.yml"                              , emit: versions
 
     when:

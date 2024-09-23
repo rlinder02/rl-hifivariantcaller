@@ -5,6 +5,7 @@
 */
 include { ALIGNMENT               } from '../subworkflows/local/alignment'
 include { VARIANTCALLTN           } from '../subworkflows/local/variantcalltn'
+include { VARIANTANNOT            } from '../subworkflows/local/variantannot'
 
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
@@ -118,6 +119,13 @@ workflow HIFIVARIANTCALLER {
 
     ch_versions = ch_versions.mix(VARIANTCALLTN.out.versions)
 
+    //
+    // SUBWORKFLOW: Liftover variants to ref genome coordinates and annotate
+    //
+    // VARIANTANNOT (  )
+
+    // ch_versions = ch_versions.mix(VARIANTANNOT.out.versions)
+    
     //
     // Collate and save software versions
     //
