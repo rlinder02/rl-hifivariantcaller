@@ -35,7 +35,7 @@ workflow HIFIVARIANTCALLER {
     ch_ind_genome_fai = ch_ind_genome.combine(ch_ind_fasta_fai,by:0).map { meta, bam, bai -> 
                                             meta = meta.id
                                             [meta, bam , bai]
-                                            }.view()
+                                            }
 
     ch_ind_genome_tx = ch_ind_genome.map { meta, path ->  
                                 meta = meta + [type:'treatment']
@@ -104,6 +104,7 @@ workflow HIFIVARIANTCALLER {
                                                      def bam1_sort = bam1.toString().contains('control') ? 0: 1 
                                                      def bam2_sort = bam2.toString().contains('control') ? 0: 1
                                                      bam1_sort.value <=> bam2_sort.value } )
+        ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ind_genome_fai, by:0).view()
     }
     
     //
