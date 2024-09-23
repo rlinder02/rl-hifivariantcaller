@@ -32,7 +32,10 @@ workflow HIFIVARIANTCALLER {
                                 }
     ch_ind_genome = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ind] }
     ch_ind_fasta_fai = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ind_fai] }
-    ch_ind_genome_fai = ch_ind_genome.combine(ch_ind_fasta_fai,by:0)
+    ch_ind_genome_fai = ch_ind_genome.combine(ch_ind_fasta_fai,by:0).map { meta, bam, bai -> 
+                                            meta = meta.id
+                                            [meta, bam , bai]
+                                            }.view()
 
     ch_ind_genome_tx = ch_ind_genome.map { meta, path ->  
                                 meta = meta + [type:'treatment']
@@ -66,7 +69,7 @@ workflow HIFIVARIANTCALLER {
                                 meta = meta + [type:'control']
                                 [meta, path]
                                 }
-        ch_ref_fai_ctl= ch_ref_genome_fai.map { meta, path ->  
+        ch_ref_fai_ctl = ch_ref_genome_fai.map { meta, path ->  
                                 meta = meta + [type:'control']
                                 [meta, path]
                                 }
@@ -102,7 +105,7 @@ workflow HIFIVARIANTCALLER {
                                                      def bam2_sort = bam2.toString().contains('control') ? 0: 1
                                                      bam1_sort.value <=> bam2_sort.value } )
     }
-    ch_ind_genome_fai.view()
+    
     //
     // SUBWORKFLOW: Call variants in tumor/normal mode
     //
