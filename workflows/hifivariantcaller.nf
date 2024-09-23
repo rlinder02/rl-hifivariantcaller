@@ -4,6 +4,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 include { ALIGNMENT               } from '../subworkflows/local/alignment'
+include { VARIANTCALLTN           } from '../subworkflows/local/variantcalltn'
 
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
@@ -116,7 +117,7 @@ workflow HIFIVARIANTCALLER {
     VARIANTCALLTN ( ch_all_bam_bai_ind_ref )
 
     ch_versions = ch_versions.mix(VARIANTCALLTN.out.versions)
-    
+
     //
     // Collate and save software versions
     //
