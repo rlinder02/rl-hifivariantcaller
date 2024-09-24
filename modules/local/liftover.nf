@@ -36,8 +36,8 @@ process LIFTOVER {
         --write-src \\
         $args
 
-    bcftools sort --output-type z -o ${prefix}.liftover.vcf.gz -W=tbi ${prefix}.liftover.bcf
-    mv ${prefix}.liftover.vcf.gz ${prefix}.liftover.vcf.gz.tbi ${prefix}.output/
+    bcftools sort --output-type v -o ${prefix}.liftover.vcf -W=tbi ${prefix}.liftover.bcf
+    mv ${prefix}.liftover.vcf ${prefix}.output/
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
