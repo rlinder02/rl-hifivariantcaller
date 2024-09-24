@@ -27,6 +27,10 @@ workflow HIFIVARIANTCALLER {
     main:
     // Need to create additional channels to accomodate the "type" meta being added below on the fly 
 
+    ch_chain = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> 
+                                    meta = meta.id 
+                                    [meta, chain] 
+                                    }
     ch_tx_bam = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, tx] }
     ch_tx_bam = ch_tx_bam.map { meta, path ->  
                                 meta = meta + [type:'treatment']
@@ -45,6 +49,10 @@ workflow HIFIVARIANTCALLER {
                                 }
     ch_ref_genome = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ref] }
     ch_ref_genome_fai = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, fai] }
+    ch_ref_fasta_fai = ch_ref_genome.combine(ch_ref_genome_fai,by:0).map { meta, bam, bai -> 
+                                            meta = meta.id
+                                            [meta, bam , bai]
+                                            }
     ch_ref_genome_tx = ch_ref_genome.map { meta, path ->  
                                 meta = meta + [type:'treatment']
                                 [meta, path]
@@ -116,15 +124,17 @@ workflow HIFIVARIANTCALLER {
     // SUBWORKFLOW: Call variants in tumor/normal mode
     //
     VARIANTCALLTN ( ch_all_bam_bai_ind_ref )
-
+    ch_snv_indel_vcf_ind_fasta = VARIANTCALLTN.out.snv_indel_vcf.combine(ch_ind_genome_fai, by:0)
+    ch_snv_indel_vcf_ind_ref_fasta = ch_snv_indel_vcf_ind_fasta.combine(ch_ref_fasta_fai, by:0)
+    ch_snv_indel_vcf_ind_ref_fasta_chain = ch_snv_indel_vcf_ind_ref_fasta.combine(ch_chain, by:0)
     ch_versions = ch_versions.mix(VARIANTCALLTN.out.versions)
 
     //
     // SUBWORKFLOW: Liftover variants to ref genome coordinates and annotate
     //
-    // VARIANTANNOT (  )
+    VARIANTANNOT ( ch_snv_indel_vcf_ind_ref_fasta_chain )
 
-    // ch_versions = ch_versions.mix(VARIANTANNOT.out.versions)
+    ch_versions = ch_versions.mix(VARIANTANNOT.out.versions)
     
     //
     // Collate and save software versions

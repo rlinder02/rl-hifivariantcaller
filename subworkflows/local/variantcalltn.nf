@@ -1,4 +1,5 @@
-include { CLAIRSTN          } from '../../modules/local/clairstn'
+include { CLAIRSTN           } from '../../modules/local/clairstn'
+include { CONCATVCF          } from '../../modules/local/concatvcf'
 
 workflow VARIANTCALLTN {
 
@@ -9,14 +10,15 @@ workflow VARIANTCALLTN {
     ch_versions = Channel.empty()
 
     CLAIRSTN ( ch_bams_bai_ind_refs )
-
     ch_versions = ch_versions.mix(CLAIRSTN.out.versions.first())
 
+    ch_snv_indel = CLAIRSTN.out.snv_vcf.combine(CLAIRSTN.out.indel_vcf,by:0)
+
+    CONCATVCF ( ch_snv_indel )
+    ch_versions = ch_versions.mix(CONCATVCF.out.versions.first())
+
     emit:
-    clairs_snv_vcf          = CLAIRSTN.out.snv_vcf          // channel: [ val(meta), [ vcf ] ]
-    clairs_indel_vcf        = CLAIRSTN.out.indel_vcf        // channel: [ val(meta), [ vcf ] ]
-    clairs_snv_vcf_tbi      = CLAIRSTN.out.snv_vcf_tbi      // channel: [ val(meta), [ tbi ] ]
-    clairs_indel_vcf_tbi    = CLAIRSTN.out.indel_vcf_tbi    // channel: [ val(meta), [ tbi ] ]
+    snv_indel_vcf           = CONCATVCF.out.vcf             // channel: [ val(meta), [ vcf ] ]
     versions                = ch_versions                   // channel: [ versions.yml ]
 }
 
