@@ -24,7 +24,7 @@ process SIGPROFILER {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta}"
     """
-    profile_mutations.py $vcf ${prefix}.mut.profile "${ref_id}"  
+    profile_mutations.py $vcf_dir ${prefix}.mut.profile "${ref_id}"  
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
