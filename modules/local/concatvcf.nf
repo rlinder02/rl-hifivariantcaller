@@ -8,7 +8,7 @@ process CONCATVCF {
         'docker.io/rlinder02/vcfliftover:v0.0.1' }"
 
     input:
-    tuple val(meta), path(snv_vcf), path(indel_vcf)
+    tuple val(meta), path(snv_vcf), path(snv_tbi), path(indel_vcf), path(indel_tbi)
 
     output:
     tuple val(meta), path("*.combined.vcf.gz"), emit: vcf
