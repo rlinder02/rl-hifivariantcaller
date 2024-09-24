@@ -9,7 +9,7 @@ process SIGPROFILER {
     containerOptions = "--user root"
 
     input:
-    tuple val(meta), path(vcf), path(tbi), val(ref_id)
+    tuple val(meta), path(vcf_dir), val(ref_id)
 
     output:
     tuple val(meta), path("${meta}.mut.profile/Activites/*.pdf")       , emit: activities_pdf

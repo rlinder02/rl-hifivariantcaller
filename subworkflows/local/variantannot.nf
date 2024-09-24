@@ -17,7 +17,9 @@ workflow VARIANTANNOT {
 
     ch_liftover_ref_id = ch_liftover.combine(ch_ref_id, by:0)
 
-    SIGPROFILER ( ch_liftover_ref_id )
+    ch_liftover_dir_ref_id = LIFTOVER.out.liftover_directory.combine(ch_ref_id, by:0)
+
+    SIGPROFILER ( ch_liftover_dir_ref_id )
 
     emit:
     activites_pdf       = SIGPROFILER.out.activities_pdf          // channel: [ val(meta), [ pdf ] ]

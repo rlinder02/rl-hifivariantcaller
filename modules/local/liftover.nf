@@ -11,8 +11,9 @@ process LIFTOVER {
     tuple val(meta), path(vcf), path(ind_fasta), path(ind_fasta_fai), path(ref_fasta), path(ref_fasta_fai), path(chain)
 
     output:
-    tuple val(meta), path("*.liftover.vcf.gz")      , emit: liftover_vcf
-    tuple val(meta), path("*.liftover.vcf.gz.tbi")  , emit: liftover_vcf_tbi
+    tuple val(meta), path("${meta}.output")                        , emit: liftover_directory
+    tuple val(meta), path("${meta}.output/*.liftover.vcf.gz")      , emit: liftover_vcf
+    tuple val(meta), path("${meta}.output/*.liftover.vcf.gz.tbi")  , emit: liftover_vcf_tbi
     path "versions.yml"           , emit: versions
 
     when:
@@ -23,6 +24,7 @@ process LIFTOVER {
     def prefix = task.ext.prefix ?: "${meta}"
     """
     zcat $vcf | sed 's/FORMAT=<ID=AF,Number=1/FORMAT=<ID=AF,Number=A/' > converted.vcf
+    mkdir -p ${prefix}.output
     bcftools +liftover \\
         --output-type u \\
         --output ${prefix}.liftover.bcf \\
@@ -35,6 +37,7 @@ process LIFTOVER {
         $args
 
     bcftools sort --output-type z -o ${prefix}.liftover.vcf.gz -W=tbi ${prefix}.liftover.bcf
+    mv ${prefix}.liftover.vcf.gz ${prefix}.liftover.vcf.gz.tbi ${prefix}.output/
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
