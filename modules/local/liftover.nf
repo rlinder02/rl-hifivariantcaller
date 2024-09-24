@@ -11,9 +11,9 @@ process LIFTOVER {
     tuple val(meta), path(vcf), path(ind_fasta), path(ind_fasta_fai), path(ref_fasta), path(ref_fasta_fai), path(chain)
 
     output:
-    tuple val(meta), path("${meta}.output")                        , emit: liftover_directory
-    tuple val(meta), path("${meta}.output/*.liftover.vcf.gz")      , emit: liftover_vcf
-    tuple val(meta), path("${meta}.output/*.liftover.vcf.gz.tbi")  , emit: liftover_vcf_tbi
+    tuple val(meta), path("${meta}.output")         , emit: liftover_directory
+    tuple val(meta), path("*.liftover.vcf.gz")      , emit: liftover_vcf
+    tuple val(meta), path("*.liftover.vcf.gz.tbi")  , emit: liftover_vcf_tbi
     path "versions.yml"           , emit: versions
 
     when:
