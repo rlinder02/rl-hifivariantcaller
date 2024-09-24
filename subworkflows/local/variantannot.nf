@@ -1,4 +1,5 @@
 include { LIFTOVER          } from '../../modules/local/liftover'
+include { SIGPROFILER       } from '../../modules/local/sigprofiler'
 
 workflow VARIANTANNOT {
 
