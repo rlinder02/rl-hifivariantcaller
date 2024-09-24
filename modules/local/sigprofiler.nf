@@ -1,6 +1,7 @@
 process SIGPROFILER {
     tag "$meta"
     label 'process_medium'
+    debug true
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -24,7 +25,8 @@ process SIGPROFILER {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta}"
     """
-    profile_mutations.py $vcf_dir ${prefix}.mut.profile "${ref_id}"  
+    echo $vcf_dir
+    profile_mutations.py $vcf_dir ${prefix}.mut.profile $ref_id  
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

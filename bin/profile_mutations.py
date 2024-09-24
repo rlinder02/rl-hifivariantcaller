@@ -22,6 +22,7 @@ def parse_args():
 def map_mut_profiles(vcf_dir, out_dir, ref):
     """Map known mutational profiles onto samples in VCF format"""
     print(ref)
+    print(vcf_dir)
     genInstall.install(ref)
     Analyze.cosmic_fit(samples=vcf_dir, output=out_dir, input_type="vcf", context_type="96", genome_build=ref)
 
