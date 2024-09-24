@@ -23,7 +23,7 @@ process LIFTOVER {
     def prefix = task.ext.prefix ?: "${meta}"
     """
     bcftools +liftover \\
-        -Ou $vcf \\
+        -Oz $vcf \\
         -- \\
         -s $ind_fasta \\
         -f $ref_fasta \\
