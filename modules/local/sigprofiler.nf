@@ -30,7 +30,7 @@ process SIGPROFILER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        SigProfilerAssignment: \$(pip show SigProfilerAssignment | head -2 | tail -1)
+        SigProfilerAssignment: \$(pip show SigProfilerAssignment | head -2 | tail -1 | sed 's/Version: //')
     END_VERSIONS
     """
 
