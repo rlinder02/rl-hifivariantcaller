@@ -13,10 +13,10 @@ process SIGPROFILER {
     tuple val(meta), path(vcf_dir), val(ref_id)
 
     output:
-    tuple val(meta), path("${meta}.mut.profile/Assignment_Solution/Activites/*.pdf")           , emit: activities_pdf
-    tuple val(meta), path("${meta}.mut.profile/Assignment_Solution/Signatures/*.pdf")          , emit: signatures_pdf
-    tuple val(meta), path("${meta}.mut.profile/Assignment_Solution/Solution_Stats/*_Stats.txt"), emit: stats_txt
-    path "versions.yml"                                                                        , emit: versions
+    tuple val(meta), path("${meta}.mut.profile/Assignment_Solution/Activities/*.pdf")           , emit: activities_pdf
+    tuple val(meta), path("${meta}.mut.profile/Assignment_Solution/Signatures/*.pdf")           , emit: signatures_pdf
+    tuple val(meta), path("${meta}.mut.profile/Assignment_Solution/Solution_Stats/*_Stats.txt") , emit: stats_txt
+    path "versions.yml"                                                                         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
