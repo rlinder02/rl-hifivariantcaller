@@ -23,7 +23,7 @@ process CONCATVCF {
     """
     bcftools \\
         concat \\
-        --allow_overlaps \\
+        --allow-overlaps \\
         -O z \\
         --threads $task.cpus \\
         --output ${prefix}.combined.vcf.gz \\
