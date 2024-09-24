@@ -22,13 +22,17 @@ process LIFTOVER {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta}"
     """
+    zcat $vcf | sed 's/FORMAT=<ID=AF,Number=1/FORMAT=<ID=AF,Number=A/' > converted.vcf
     bcftools +liftover \\
         --output-type u \\
         --output ${prefix}.liftover.bcf \\
-        $vcf -- \\
+        converted.vcf -- \\
         -s $ind_fasta \\
         -f $ref_fasta \\
-        -c $chain
+        -c $chain \\
+        --reject ${prefix}.rejected.vcf \\
+        --write-src \\
+        $args
 
     bcftools sort --output-type z -o ${prefix}.liftover.vcf.gz -W=tbi ${prefix}.liftover.bcf
 
