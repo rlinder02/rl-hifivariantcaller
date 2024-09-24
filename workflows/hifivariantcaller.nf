@@ -27,6 +27,13 @@ workflow HIFIVARIANTCALLER {
     main:
     // Need to create additional channels to accomodate the "type" meta being added below on the fly 
 
+    ch_ref_id = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> 
+                                    meta = meta.id
+                                    [meta, ref] 
+                                    }.map { meta, ref ->
+                                    ref_id = ref.name.toString().split('/').last().split('\\.').first()
+                                    [meta, ref_id]
+                                    }
     ch_chain = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> 
                                     meta = meta.id 
                                     [meta, chain] 
@@ -132,7 +139,9 @@ workflow HIFIVARIANTCALLER {
     //
     // SUBWORKFLOW: Liftover variants to ref genome coordinates and annotate
     //
-    VARIANTANNOT ( ch_snv_indel_vcf_ind_ref_fasta_chain )
+    VARIANTANNOT ( ch_snv_indel_vcf_ind_ref_fasta_chain,
+                   ch_ref_id
+    )
 
     ch_versions = ch_versions.mix(VARIANTANNOT.out.versions)
     
