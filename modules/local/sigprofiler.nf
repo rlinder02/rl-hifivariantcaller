@@ -6,6 +6,7 @@ process SIGPROFILER {
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'oras://community.wave.seqera.io/library/sigprofilerassignment_sigprofilerplotting:846b7d5b7ed64e15':
         'community.wave.seqera.io/library/sigprofilerassignment_sigprofilerplotting:846b7d5b7ed64e15' }"
+    containerOptions = "--user root"
 
     input:
     tuple val(meta), path(vcf), path(tbi), val(ref_id)
@@ -23,7 +24,7 @@ process SIGPROFILER {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta}"
     """
-    profile_mutations.py $vcf ${prefix}.mut.profile $ref_id  
+    profile_mutations.py $vcf ${prefix}.mut.profile "${ref_id}"  
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
