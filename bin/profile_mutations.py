@@ -6,7 +6,9 @@
 # Date: 2024-09-16
 
 import argparse
+from SigProfilerMatrixGenerator import install as genInstall
 from SigProfilerAssignment import Analyzer as Analyze
+
 
 def parse_args():
 	"""this enables users to provide input as command line arguments to minimize the need for directly modifying the script; please enter '-h' to see the full list of options"""
@@ -19,6 +21,8 @@ def parse_args():
 
 def map_mut_profiles(vcf_dir, out_dir, ref):
     """Map known mutational profiles onto samples in VCF format"""
+    print(ref)
+    genInstall.install(ref)
     Analyze.cosmic_fit(samples=vcf_dir, output=out_dir, input_type="vcf", context_type="96", genome_build=ref)
 
 def main():
