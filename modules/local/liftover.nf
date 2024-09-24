@@ -23,15 +23,14 @@ process LIFTOVER {
     def prefix = task.ext.prefix ?: "${meta}"
     """
     bcftools +liftover \\
-        -Oz $vcf \\
-        -- \\
+        --output-type u \\
+        --output ${prefix}.liftover.bcf \\
+        $vcf -- \\
         -s $ind_fasta \\
         -f $ref_fasta \\
-        -c $chain \\
-        --reject ${prefix}.rejected.vcf \\
-        --write-src \\
-    | \\
-    bcftools sort -Oz -o ${prefix}.liftover.vcf.gz -W=tbi
+        -c $chain
+
+    bcftools sort --output-type z -o ${prefix}.liftover.vcf.gz -W=tbi ${prefix}.liftover.bcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
