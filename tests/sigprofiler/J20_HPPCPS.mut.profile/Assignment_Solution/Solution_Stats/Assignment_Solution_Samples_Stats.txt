@@ -1,0 +1,2 @@
+Sample Names	Total Mutations	Cosine Similarity	L1 Norm	L1_Norm_%	L2 Norm	L2_Norm_%	KL Divergence	Correlation
+J20_HPPCPS	38177	0.937	12143.644	31.809%	1879.862	35.556%	0.08356	0.865

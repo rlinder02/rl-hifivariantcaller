@@ -1,0 +1,8 @@
+Sample	pbmm2	clairs	bcftools	qualimap	SigProfilerAssignment	rl/hifivariantcaller	Nextflow
+ALIGN	pbmm2 1.13.1						
+CLAIRSTN		0.3.0					
+CONCATVCF			1.21				
+LIFTOVER			1.21				
+QUALIMAP_BAMQC				2.3			
+SIGPROFILER					0.1.8		
+Workflow						1.0.dev0	24.4.4
