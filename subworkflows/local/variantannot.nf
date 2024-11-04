@@ -9,7 +9,6 @@ workflow VARIANTANNOT {
     main:
 
     ch_versions = Channel.empty()
-
     LIFTOVER ( ch_snv_indel_vcf_ind_ref_fasta_chain )
     ch_versions = ch_versions.mix(LIFTOVER.out.versions.first())
 
