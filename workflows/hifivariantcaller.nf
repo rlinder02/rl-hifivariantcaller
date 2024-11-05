@@ -68,7 +68,7 @@ workflow HIFIVARIANTCALLER {
                                 meta = meta + [type:'treatment']
                                 [meta, path]
                                 }
-    ch_tx_bam_ind_genome = ch_tx_bam.combine(ch_ind_genome_tx,by:0)
+    ch_tx_bam_ref_genome = ch_tx_bam.combine(ch_ref_genome_tx,by:0)
     if (params.treatment_only) {
         ch_ctl_bam = Channel.of("/")
         ch_bam_ref = ch_tx_bam_ind_genome
@@ -90,8 +90,8 @@ workflow HIFIVARIANTCALLER {
                                 meta = meta + [type:'control']
                                 [meta, path]
                                 }
-        ch_ctl_bam_ind_genome = ch_ctl_bam.combine(ch_ind_genome_ctl,by:0)
-        ch_bam_ref = ch_tx_bam_ind_genome.mix(ch_ctl_bam_ind_genome)
+        ch_ctl_bam_ref_genome = ch_ctl_bam.combine(ch_ref_genome_ctl,by:0)
+        ch_bam_ref = ch_tx_bam_ref_genome.mix(ch_ctl_bam_ref_genome)
     }
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
@@ -126,7 +126,7 @@ workflow HIFIVARIANTCALLER {
                                                      def bam2_sort = bam2.toString().contains('control') ? 0: 1
                                                      bam1_sort.value <=> bam2_sort.value } )
         ch_all_bam_bai.view()
-        ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ind_genome_fai, by:0)
+        ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ref_fasta_fai, by:0)
     }
     
     //
@@ -136,12 +136,15 @@ workflow HIFIVARIANTCALLER {
     ch_snv_indel_vcf_ind_fasta = VARIANTCALLTN.out.snv_indel_vcf.combine(ch_ind_genome_fai, by:0)
     ch_snv_indel_vcf_ind_ref_fasta = ch_snv_indel_vcf_ind_fasta.combine(ch_ref_fasta_fai, by:0)
     ch_snv_indel_vcf_ind_ref_fasta_chain = ch_snv_indel_vcf_ind_ref_fasta.combine(ch_chain, by:0)
+
+
     ch_versions = ch_versions.mix(VARIANTCALLTN.out.versions)
 
     //
     // SUBWORKFLOW: Liftover variants to ref genome coordinates and annotate
     //
     VARIANTANNOT ( ch_snv_indel_vcf_ind_ref_fasta_chain,
+                   VARIANTCALLTN.out.snv_indel_dir,
                    ch_ref_id
     )
 

@@ -11,8 +11,10 @@ process CONCATVCF {
     tuple val(meta), path(snv_vcf), path(snv_tbi), path(indel_vcf), path(indel_tbi)
 
     output:
-    tuple val(meta), path("*.combined.vcf.gz"), emit: vcf
-    path "versions.yml"                       , emit: versions
+    tuple val(meta), path("${meta}.output")                   , emit: concat_directory
+    tuple val(meta), path("*.combined.corrected.vcf.gz")      , emit: concat_vcf
+    tuple val(meta), path("*.combined.corrected.vcf.gz.tbi")  , emit: concat_vcf_tbi
+    path "versions.yml"                                       , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -30,6 +32,12 @@ process CONCATVCF {
         $snv_vcf \\
         $indel_vcf \\
         $args	
+    zcat ${prefix}.combined.vcf.gz | sed 's/FORMAT=<ID=AF,Number=1/FORMAT=<ID=AF,Number=A/' > ${prefix}.combined.corrected.vcf.gz
+    mkdir -p ${prefix}.output
+    bcftools sort --output-type z -o ${prefix}.sorted.vcf.gz -W=tbi ${prefix}.combined.corrected.vcf.gz
+    zcat ${prefix}.combined.corrected.vcf.gz > ${prefix}.combined.corrected.vcf
+    mv ${prefix}.combined.corrected.vcf ${prefix}.output/
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

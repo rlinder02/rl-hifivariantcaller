@@ -20,7 +20,9 @@ workflow VARIANTCALLTN {
     ch_versions = ch_versions.mix(CONCATVCF.out.versions.first())
 
     emit:
-    snv_indel_vcf           = CONCATVCF.out.vcf             // channel: [ val(meta), [ vcf ] ]
-    versions                = ch_versions                   // channel: [ versions.yml ]
+    snv_indel_vcf           = CONCATVCF.out.concat_vcf             // channel: [ val(meta), [ vcf ] ]
+    snv_indel_vcf_tbi       = CONCATVCF.out.concat_vcf_tbi
+    snv_indel_dir           = CONCATVCF.out.concat_directory
+    versions                = ch_versions                          // channel: [ versions.yml ]
 }
 
