@@ -32,10 +32,9 @@ process CONCATVCF {
         $snv_vcf \\
         $indel_vcf \\
         $args	
-    zcat ${prefix}.combined.vcf.gz | sed 's/FORMAT=<ID=AF,Number=1/FORMAT=<ID=AF,Number=A/' > ${prefix}.combined.corrected.vcf.gz
+    zcat ${prefix}.combined.vcf.gz | sed 's/FORMAT=<ID=AF,Number=1/FORMAT=<ID=AF,Number=A/' > ${prefix}.combined.corrected.vcf
     mkdir -p ${prefix}.output
-    bcftools sort --output-type z -o ${prefix}.sorted.vcf.gz -W=tbi ${prefix}.combined.corrected.vcf.gz
-    zcat ${prefix}.combined.corrected.vcf.gz > ${prefix}.combined.corrected.vcf
+    bcftools sort --output-type z -o ${prefix}.sorted.vcf.gz -W=tbi ${prefix}.combined.corrected.vcf
     mv ${prefix}.combined.corrected.vcf ${prefix}.output/
 
 
