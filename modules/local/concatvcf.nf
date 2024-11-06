@@ -12,8 +12,8 @@ process CONCATVCF {
 
     output:
     tuple val(meta), path("${meta}.output")                   , emit: concat_directory
-    tuple val(meta), path("*.combined.corrected.vcf.gz")      , emit: concat_vcf
-    tuple val(meta), path("*.combined.corrected.vcf.gz.tbi")  , emit: concat_vcf_tbi
+    tuple val(meta), path("*.sorted.vcf.gz")      , emit: concat_vcf
+    tuple val(meta), path("*.sorted.vcf.gz.tbi")  , emit: concat_vcf_tbi
     path "versions.yml"                                       , emit: versions
 
     when:
