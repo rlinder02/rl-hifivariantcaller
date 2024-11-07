@@ -4,8 +4,8 @@ process CLAIRSTN {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://docker.io/hkubal/clairs:v0.3.1':
-        'docker.io/hkubal/clairs:v0.3.1' }"
+        'https://docker.io/hkubal/clairs:v0.4.0':
+        'docker.io/hkubal/clairs:v0.4.0' }"
 
     input:
     tuple val(meta), path(bam), path(bai), path(ind_fasta), path(ind_fasta_fai)
@@ -34,6 +34,7 @@ process CLAIRSTN {
         --sample_name $prefix \\
         --snv_min_af 0.005 \\
         --enable_indel_calling \\
+        --indel_min_af 0.005 \\
         --min_coverage 1 \\
         $args	
 

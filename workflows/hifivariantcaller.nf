@@ -5,6 +5,7 @@
 */
 include { ALIGNMENT               } from '../subworkflows/local/alignment'
 include { VARIANTCALLTN           } from '../subworkflows/local/variantcalltn'
+include { VARIANTCALLTO           } from '../subworkflows/local/variantcallto'
 include { VARIANTANNOT            } from '../subworkflows/local/variantannot'
 
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
@@ -112,9 +113,7 @@ workflow HIFIVARIANTCALLER {
 
     if (params.treatment_only) {
         ch_all_bam_bai = ch_bam_bai
-        // complete the below line later 
-        // ch_all_bam_bai_ind_ref = 
-
+        ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ind_genome_fai, by:0)
     } else {
         // need to specify custome sort function that converts items to a string, assigns a value of 0 if the string contains 'CTL' in this case, or a 1 otherwise (to the tx sample), then sorts in ascending order using the spaceship comparator operation, so the CTL sample will always be first in the tuple
         ch_all_bam_bai = ch_bam_bai.map { meta, bam, bai -> 
@@ -137,6 +136,12 @@ workflow HIFIVARIANTCALLER {
     ch_snv_indel_vcf_ind_ref_fasta = ch_snv_indel_vcf_ind_fasta.combine(ch_ref_fasta_fai, by:0)
     ch_snv_indel_vcf_ind_ref_fasta_chain = ch_snv_indel_vcf_ind_ref_fasta.combine(ch_chain, by:0)
     ch_versions = ch_versions.mix(VARIANTCALLTN.out.versions)
+
+
+    //
+    // SUBWORKFLOW: Call variants in tumor-only mode
+    //
+    VARIANTCALLTO ()
 
     //
     // SUBWORKFLOW: Liftover variants to ref genome coordinates and annotate

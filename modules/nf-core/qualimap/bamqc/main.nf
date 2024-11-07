@@ -32,6 +32,7 @@ process QUALIMAP_BAMQC {
         $args \\
         -bam $bam \\
         -p $strandedness \\
+        -c \\
         -outdir $prefix \\
         -nt $task.cpus
 
