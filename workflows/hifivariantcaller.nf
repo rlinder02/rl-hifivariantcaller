@@ -27,25 +27,38 @@ workflow HIFIVARIANTCALLER {
 
     main:
     // Need to create additional channels to accomodate the "type" meta being added below on the fly 
+    if (params.treatment_only) {
+    ch_chain = ch_samplesheet.map { meta, tx, ind, ind_fai, ref, fai, chain -> [meta, chain] }
+    ch_tx_bam = ch_samplesheet.map { meta, tx, ind, ind_fai, ref, fai, chain -> [meta, tx] }
+    ch_ind_genome = ch_samplesheet.map { meta, tx, ind, ind_fai, ref, fai, chain -> [meta, ind] }
+    ch_ind_fasta_fai = ch_samplesheet.map { meta, tx, ind, ind_fai, ref, fai, chain -> [meta, ind_fai] }
+    ch_ref_genome = ch_samplesheet.map { meta, tx, ind, ind_fai, ref, fai, chain -> [meta, ref] }
+    ch_ref_genome_fai = ch_samplesheet.map { meta, tx, ind, ind_fai, ref, fai, chain -> [meta, fai] }
+    } else {
+    ch_chain = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, chain] }
+    ch_tx_bam = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, tx] }
+    ch_ind_genome = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ind] }
+    ch_ind_fasta_fai = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ind_fai] }
+    ch_ref_genome = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ref] }
+    ch_ref_genome_fai = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, fai] }
+    }
 
-    ch_ref_id = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> 
-                                    meta = meta.id
-                                    [meta, ref] 
-                                    }.map { meta, ref ->
+    ch_ref_id = ch_ref_genome.map { meta, ref -> 
+                                meta = meta.id
+                                [meta, ref] 
+                               }.map { meta, ref ->
                                     ref_id = ref.name.toString().split('/').last().split('\\.').first()
                                     [meta, ref_id]
-                                    }
-    ch_chain = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> 
-                                    meta = meta.id 
-                                    [meta, chain] 
-                                    }
-    ch_tx_bam = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, tx] }
+                               }
+    ch_chain = ch_chain.map { meta, chain -> 
+                              meta = meta.id 
+                              [meta, chain] 
+                            }
+
     ch_tx_bam = ch_tx_bam.map { meta, path ->  
                                 meta = meta + [type:'treatment']
                                 [meta, path]
                                 }
-    ch_ind_genome = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ind] }
-    ch_ind_fasta_fai = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ind_fai] }
     ch_ind_genome_fai = ch_ind_genome.combine(ch_ind_fasta_fai,by:0).map { meta, bam, bai -> 
                                             meta = meta.id
                                             [meta, bam , bai]
@@ -55,8 +68,6 @@ workflow HIFIVARIANTCALLER {
                                 meta = meta + [type:'treatment']
                                 [meta, path]
                                 }
-    ch_ref_genome = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ref] }
-    ch_ref_genome_fai = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, fai] }
     ch_ref_fasta_fai = ch_ref_genome.combine(ch_ref_genome_fai,by:0).map { meta, bam, bai -> 
                                             meta = meta.id
                                             [meta, bam , bai]
@@ -69,8 +80,6 @@ workflow HIFIVARIANTCALLER {
                                 meta = meta + [type:'treatment']
                                 [meta, path]
                                 }
-    ch_tx_bam.view()
-    ch_ind_genome_tx.view()
     ch_tx_bam_ind_genome = ch_tx_bam.combine(ch_ind_genome_tx,by:0)
 
     if (params.treatment_only) {
