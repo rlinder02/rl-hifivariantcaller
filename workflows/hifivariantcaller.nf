@@ -72,6 +72,7 @@ workflow HIFIVARIANTCALLER {
     ch_tx_bam_ind_genome = ch_tx_bam.combine(ch_ind_genome_tx,by:0)
 
     if (params.treatment_only) {
+        println 'Treatment only!!'
         ch_ctl_bam = Channel.of("/")
         ch_bam_ref = ch_tx_bam_ind_genome
     } else {
