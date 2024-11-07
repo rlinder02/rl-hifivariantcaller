@@ -69,13 +69,17 @@ workflow HIFIVARIANTCALLER {
                                 meta = meta + [type:'treatment']
                                 [meta, path]
                                 }
+    ch_tx_bam.view()
+    ch_ind_genome_tx.view()
     ch_tx_bam_ind_genome = ch_tx_bam.combine(ch_ind_genome_tx,by:0)
 
     if (params.treatment_only) {
+        println 'Treatment only!'
         ch_ctl_bam = Channel.of("/")
         ch_bam_ref = ch_tx_bam_ind_genome
         ch_bam_ref.view()
     } else {
+        println 'Treatment and control!'
         ch_ctl_bam = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ctl] }
         ch_ctl_bam = ch_ctl_bam.map { meta, path ->  
                                 meta = meta + [type:'control']
