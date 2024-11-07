@@ -70,6 +70,7 @@ workflow HIFIVARIANTCALLER {
                                 [meta, path]
                                 }
     ch_tx_bam_ind_genome = ch_tx_bam.combine(ch_ind_genome_tx,by:0)
+
     if (params.treatment_only) {
         ch_ctl_bam = Channel.of("/")
         ch_bam_ref = ch_tx_bam_ind_genome
@@ -114,6 +115,16 @@ workflow HIFIVARIANTCALLER {
     if (params.treatment_only) {
         ch_all_bam_bai = ch_bam_bai
         ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ind_genome_fai, by:0)
+
+    //
+    // SUBWORKFLOW: Call variants in tumor-only mode
+    //
+    VARIANTCALLTO ( ch_all_bam_bai_ind_ref )
+
+    ch_snv_indel_vcf_ind_fasta = VARIANTCALLTO.out.snv_indel_vcf.combine(ch_ind_genome_fai, by:0)
+    ch_snv_indel_vcf_ind_ref_fasta = ch_snv_indel_vcf_ind_fasta.combine(ch_ref_fasta_fai, by:0)
+    ch_snv_indel_vcf_ind_ref_fasta_chain = ch_snv_indel_vcf_ind_ref_fasta.combine(ch_chain, by:0)
+    ch_versions = ch_versions.mix(VARIANTCALLTO.out.versions)    
     } else {
         // need to specify custome sort function that converts items to a string, assigns a value of 0 if the string contains 'CTL' in this case, or a 1 otherwise (to the tx sample), then sorts in ascending order using the spaceship comparator operation, so the CTL sample will always be first in the tuple
         ch_all_bam_bai = ch_bam_bai.map { meta, bam, bai -> 
@@ -126,22 +137,17 @@ workflow HIFIVARIANTCALLER {
                                                      bam1_sort.value <=> bam2_sort.value } )
         ch_all_bam_bai.view()
         ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ind_genome_fai, by:0)
-    }
-    
+
     //
     // SUBWORKFLOW: Call variants in tumor/normal mode
     //
     VARIANTCALLTN ( ch_all_bam_bai_ind_ref )
+
     ch_snv_indel_vcf_ind_fasta = VARIANTCALLTN.out.snv_indel_vcf.combine(ch_ind_genome_fai, by:0)
     ch_snv_indel_vcf_ind_ref_fasta = ch_snv_indel_vcf_ind_fasta.combine(ch_ref_fasta_fai, by:0)
     ch_snv_indel_vcf_ind_ref_fasta_chain = ch_snv_indel_vcf_ind_ref_fasta.combine(ch_chain, by:0)
-    ch_versions = ch_versions.mix(VARIANTCALLTN.out.versions)
-
-
-    //
-    // SUBWORKFLOW: Call variants in tumor-only mode
-    //
-    VARIANTCALLTO ()
+    ch_versions = ch_versions.mix(VARIANTCALLTN.out.versions)    
+    }
 
     //
     // SUBWORKFLOW: Liftover variants to ref genome coordinates and annotate
