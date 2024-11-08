@@ -86,7 +86,6 @@ workflow HIFIVARIANTCALLER {
         println 'Treatment only!'
         ch_ctl_bam = Channel.of("/")
         ch_bam_ref = ch_tx_bam_ind_genome
-        ch_bam_ref.view()
     } else {
         println 'Treatment and control!'
         ch_ctl_bam = ch_samplesheet.map { meta, tx, ctl, ind, ind_fai, ref, fai, chain -> [meta, ctl] }
@@ -151,7 +150,6 @@ workflow HIFIVARIANTCALLER {
                                                      def bam1_sort = bam1.toString().contains('control') ? 0: 1 
                                                      def bam2_sort = bam2.toString().contains('control') ? 0: 1
                                                      bam1_sort.value <=> bam2_sort.value } )
-        ch_all_bam_bai.view()
         ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ind_genome_fai, by:0)
 
     //
