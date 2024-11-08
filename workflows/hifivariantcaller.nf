@@ -128,7 +128,9 @@ workflow HIFIVARIANTCALLER {
 
     if (params.treatment_only) {
         ch_all_bam_bai = ch_bam_bai
+        ch_all_bam_bai.view()
         ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ind_genome_fai, by:0)
+        ch_ind_genome_fai.view()
 
     //
     // SUBWORKFLOW: Call variants in tumor-only mode
