@@ -32,10 +32,7 @@ process CLAIRSTN {
         --platform hifi_revio \\
         --output_dir $prefix \\
         --sample_name $prefix \\
-        --snv_min_af 0.005 \\
         --enable_indel_calling \\
-        --indel_min_af 0.005 \\
-        --min_coverage 1 \\
         $args	
 
     cat <<-END_VERSIONS > versions.yml
