@@ -126,7 +126,9 @@ workflow HIFIVARIANTCALLER {
     ch_bam_bai = ALIGNMENT.out.bam.combine(ALIGNMENT.out.bai, by:0)
 
     if (params.treatment_only) {
-        ch_all_bam_bai = ch_bam_bai
+        ch_all_bam_bai = ch_bam_bai.map {meta, bam, bai -> 
+                              meta = meta.id 
+                              [meta, bam, bai] }
         ch_all_bam_bai.view()
         ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ind_genome_fai, by:0)
         ch_ind_genome_fai.view()
