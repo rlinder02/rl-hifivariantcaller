@@ -1,5 +1,6 @@
 include { LIFTOVER          } from '../../modules/local/liftover'
 include { SIGPROFILER       } from '../../modules/local/sigprofiler'
+include { SNPEFF            } from '../../modules/local/snpeff'
 
 workflow VARIANTANNOT {
 
@@ -20,6 +21,9 @@ workflow VARIANTANNOT {
 
     SIGPROFILER ( ch_liftover_dir_ref_id )
     ch_versions = ch_versions.mix(SIGPROFILER.out.versions.first())
+
+    SNPEFF ( ch_liftover_ref_id )
+    ch_versions = ch_versions.mix(SNPEFF.out.versions.first())
 
     emit:
     activites_pdf       = SIGPROFILER.out.activities_pdf          // channel: [ val(meta), [ pdf ] ]
