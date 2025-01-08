@@ -16,6 +16,7 @@ workflow VARIANTCALLTN {
     ch_indel_tbi = CLAIRSTN.out.indel_vcf.combine(CLAIRSTN.out.indel_vcf_tbi,by:0)
     ch_snv_indel = ch_snv_tbi.combine(ch_indel_tbi, by:0)
 
+    // Concatenate the SNV and indel vcfs, then filter for variants that have a PASS value for the filter field
     CONCATVCF ( ch_snv_indel )
     ch_versions = ch_versions.mix(CONCATVCF.out.versions.first())
 

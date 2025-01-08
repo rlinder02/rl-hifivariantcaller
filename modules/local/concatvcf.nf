@@ -11,8 +11,8 @@ process CONCATVCF {
     tuple val(meta), path(snv_vcf), path(snv_tbi), path(indel_vcf), path(indel_tbi)
 
     output:
-    tuple val(meta), path("*.combined.vcf.gz"), emit: vcf
-    path "versions.yml"                       , emit: versions
+    tuple val(meta), path("*.combined_filtered.vcf.gz"), emit: vcf
+    path "versions.yml"                                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,12 +24,18 @@ process CONCATVCF {
     bcftools \\
         concat \\
         --allow-overlaps \\
-        -O z \\
+        -Ou \\
         --threads $task.cpus \\
-        --output ${prefix}.combined.vcf.gz \\
         $snv_vcf \\
         $indel_vcf \\
-        $args	
+    | \\
+    bcftools \\
+        filter \\
+        --IndelGap 5 \\
+        -i 'FILTER="PASS"' \\
+        -Oz \\
+        --threads $task.cpus \\
+        -o ${prefix}_combined_filtered.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
