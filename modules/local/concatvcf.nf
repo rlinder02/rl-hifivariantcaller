@@ -11,7 +11,7 @@ process CONCATVCF {
     tuple val(meta), path(snv_vcf), path(snv_tbi), path(indel_vcf), path(indel_tbi)
 
     output:
-    tuple val(meta), path("*.combined_filtered.vcf.gz"), emit: vcf
+    tuple val(meta), path("*combined_filtered.vcf.gz"), emit: vcf
     path "versions.yml"                                , emit: versions
 
     when:
