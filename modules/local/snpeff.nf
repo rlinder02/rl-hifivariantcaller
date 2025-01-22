@@ -7,7 +7,7 @@ process SNPEFF {
         'oras://community.wave.seqera.io/library/snpeff_snpsift:5.2--e2939680b6ff2466':
         'community.wave.seqera.io/library/snpeff_snpsift:5.2--e2939680b6ff2466' }"
     containerOptions = "--user root"
-    
+
     input:
     tuple val(meta), path(vcf), path(tbi), val(ref_id)
 
@@ -29,7 +29,7 @@ process SNPEFF {
     else
         new_ref_id=$ref_id
     fi
-
+    export _JAVA_OPTIONS="-Xms512m -Xmx8g"
     snpEff eff \$new_ref_id $vcf 
 
     cat <<-END_VERSIONS > versions.yml
