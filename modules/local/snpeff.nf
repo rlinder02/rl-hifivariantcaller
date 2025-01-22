@@ -12,8 +12,8 @@ process SNPEFF {
     tuple val(meta), path(vcf), path(tbi), val(ref_id)
 
     output:
-    tuple val(meta), path("*.vcf"), emit: vcf
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path("*.ann.vcf"), emit: vcf
+    path "versions.yml"               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -30,7 +30,7 @@ process SNPEFF {
         new_ref_id=$ref_id
     fi
     export _JAVA_OPTIONS="-Xms512m -Xmx8g"
-    snpEff eff \$new_ref_id $vcf 
+    snpEff eff \$new_ref_id $vcf > ${prefix}.ann.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
