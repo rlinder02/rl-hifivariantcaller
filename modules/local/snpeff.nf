@@ -1,5 +1,5 @@
 process SNPEFF {
-    tag "$meta.id"
+    tag "$meta"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -19,7 +19,7 @@ process SNPEFF {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta}"
 
     """
     if [[ $ref_id == "mm10" ]]; then
