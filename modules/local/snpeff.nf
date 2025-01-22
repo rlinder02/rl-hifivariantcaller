@@ -8,7 +8,7 @@ process SNPEFF {
         'community.wave.seqera.io/library/snpeff_snpsift:5.2--e2939680b6ff2466' }"
 
     input:
-    tuple val(meta), path(vcf), val(ref_id)
+    tuple val(meta), path(vcf), path(tbi), val(ref_id)
 
     output:
     tuple val(meta), path("*.vcf"), emit: vcf
@@ -22,7 +22,7 @@ process SNPEFF {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    if [[ "$ref_id" == "mm10" ]]; then
+    if [[ $ref_id == "mm10" ]]; then
         echo "mm10"
         new_ref_id="GRCm38.99"
     else
