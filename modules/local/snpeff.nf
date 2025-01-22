@@ -6,7 +6,8 @@ process SNPEFF {
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'oras://community.wave.seqera.io/library/snpeff_snpsift:5.2--e2939680b6ff2466':
         'community.wave.seqera.io/library/snpeff_snpsift:5.2--e2939680b6ff2466' }"
-
+    containerOptions = "--user root"
+    
     input:
     tuple val(meta), path(vcf), path(tbi), val(ref_id)
 
