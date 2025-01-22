@@ -22,7 +22,8 @@ process SNPEFF {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    if [[ $ref_id == "mm10" ]]; then
+    if [[ "$ref_id" == "mm10" ]]; then
+        echo "mm10"
         new_ref_id="GRCm38.99"
     else
         new_ref_id=$ref_id
