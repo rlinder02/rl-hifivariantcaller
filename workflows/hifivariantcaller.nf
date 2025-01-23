@@ -173,7 +173,7 @@ workflow HIFIVARIANTCALLER {
     )
 
     ch_versions = ch_versions.mix(VARIANTANNOT.out.versions)
-    
+    ch_multiqc_files = ch_multiqc_files.mix(VARIANTANNOT.out.snpeff_csv.map {it[1]})
     //
     // Collate and save software versions
     //

@@ -29,6 +29,7 @@ workflow VARIANTANNOT {
     activites_pdf       = SIGPROFILER.out.activities_pdf          // channel: [ val(meta), [ pdf ] ]
     signatures_pdf      = SIGPROFILER.out.signatures_pdf          // channel: [ val(meta), [ pdf ] ]
     stats_txt           = SIGPROFILER.out.stats_txt               // channel: [ val(meta), [ txt ] ]
+    snpeff_csv          = SNPEFF.out.csv
     versions            = ch_versions                             // channel: [ versions.yml ]
 }
 

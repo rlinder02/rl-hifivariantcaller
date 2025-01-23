@@ -13,6 +13,7 @@ process SNPEFF {
 
     output:
     tuple val(meta), path("*.ann.vcf"), emit: vcf
+    tuple val(meta), path("*.csv")    , emit: csv
     path "versions.yml"               , emit: versions
 
     when:
@@ -30,7 +31,7 @@ process SNPEFF {
         new_ref_id=$ref_id
     fi
     export _JAVA_OPTIONS="-Xms512m -Xmx8g"
-    snpEff eff \$new_ref_id $vcf > ${prefix}.ann.vcf
+    snpEff eff -csvStats ${prefix}_summary.csv \$new_ref_id $vcf > ${prefix}.ann.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
