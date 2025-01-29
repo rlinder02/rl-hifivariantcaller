@@ -33,7 +33,7 @@ process CLAIRSTO {
         --sample_name $prefix \\
         --snv_min_af 0.005 \\
         --indel_min_af 0.005 \\
-        --min_coverage 1 \\
+        --min_coverage 3 \\
         $args	
 
     cat <<-END_VERSIONS > versions.yml
