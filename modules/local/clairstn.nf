@@ -35,7 +35,7 @@ process CLAIRSTN {
         --snv_min_af 0.005 \\
         --enable_indel_calling \\
         --indel_min_af 0.005 \\
-        --min_coverage 3 \\
+        --min_coverage 1 \\
         $args	
 
     cat <<-END_VERSIONS > versions.yml

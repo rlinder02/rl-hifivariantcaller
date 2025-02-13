@@ -149,8 +149,8 @@ workflow HIFIVARIANTCALLER {
                                             [meta, bam , bai]
                                             }.groupTuple(by:0, sort: { bam1,bam2 -> 
                                             // change the below from 'control' being 0 to control being 1 to swap which is tx and which is control
-                                                     def bam1_sort = bam1.toString().contains('control') ? 1: 0 
-                                                     def bam2_sort = bam2.toString().contains('control') ? 1: 0
+                                                     def bam1_sort = bam1.toString().contains('control') ? 0: 1 
+                                                     def bam2_sort = bam2.toString().contains('control') ? 0: 1
                                                      bam1_sort.value <=> bam2_sort.value } )
         ch_all_bam_bai_ind_ref = ch_all_bam_bai.combine(ch_ind_genome_fai, by:0)
 
