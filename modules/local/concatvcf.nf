@@ -1,6 +1,7 @@
 process CONCATVCF {
     tag "$meta"
     label 'process_medium'
+    debug true
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -21,6 +22,7 @@ process CONCATVCF {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta}"
     """
+    echo $meta
     bcftools \\
         concat \\
         --allow-overlaps \\
