@@ -41,7 +41,7 @@ process CONCATVCF {
 
     if [[ $meta == "CHM13_test" ]]; then
         echo $meta
-        zcat ${prefix}_combined_filtered.vcf.gz | awk 'BEGIN{OFS="\t"} /^#/ {print} !/^#/ {\$2=\$2+14000000; print}' | gzip > ${prefix}_combined_filtered.updated.vcf.gz
+        zcat ${prefix}_combined_filtered.vcf.gz | awk 'BEGIN{OFS="\t"} /^#/ {print} !/^#/ {\$2=\$2+14000000; print}' | sed 's/##contig=<ID=chr22,length=500000>/##contig=<ID=chr22,length=51324926>/' | gzip > ${prefix}_combined_filtered.updated.vcf.gz
     else
         zcat ${prefix}_combined_filtered.vcf.gz | gzip > ${prefix}_combined_filtered.updated.vcf.gz
     fi
