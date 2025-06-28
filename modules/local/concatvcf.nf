@@ -13,7 +13,7 @@ process CONCATVCF {
 
     output:
     tuple val(meta), path("*combined_filtered.updated.vcf.gz"), emit: vcf
-    path "versions.yml"                                , emit: versions
+    path "versions.yml"                                       , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -41,7 +41,7 @@ process CONCATVCF {
 
     if [[ $meta == "CHM13_test" ]]; then
         echo $meta
-        awk 'BEGIN{OFS="\t"} /^#/ {print} !/^#/ {\$2=\$2+14000000; print}' ${prefix}_combined_filtered.vcf.gz | gzip > ${prefix}_combined_filtered.updated.vcf.gz
+        zcat ${prefix}_combined_filtered.vcf.gz | awk 'BEGIN{OFS="\t"} /^#/ {print} !/^#/ {\$2=\$2+14000000; print}' | gzip > ${prefix}_combined_filtered.updated.vcf.gz
     else
         zcat ${prefix}_combined_filtered.vcf.gz | gzip > ${prefix}_combined_filtered.updated.vcf.gz
     fi
