@@ -39,6 +39,13 @@ process CONCATVCF {
         --threads $task.cpus \\
         -o ${prefix}_combined_filtered.vcf.gz
 
+    if [[ $meta == "CHM13_test" ]]; then
+        echo $meta
+        awk 'BEGIN{OFS="\t"} /^#/ {print} !/^#/ {\$2=\$2+14000000; print}' ${prefix}_combined_filtered.vcf.gz > ${prefix}_combined_filtered.vcf.gz
+    else
+        echo "Not here"
+    fi
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         bcftools: \$(bcftools --version | head -1 | sed 's/bcftools //')
