@@ -25,8 +25,12 @@ process SIGPROFILER {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta}"
     """
-    echo $vcf_dir
-    profile_mutations.py $vcf_dir ${prefix}.mut.profile $ref_id  
+    if [[ $ref_id == "hg38" ]]; then
+        new_ref_id="GRCh38"
+    else
+        new_ref_id=$ref_id
+    fi
+    profile_mutations.py $vcf_dir ${prefix}.mut.profile \$new_ref_id
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
