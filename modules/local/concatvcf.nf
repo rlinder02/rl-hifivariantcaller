@@ -12,7 +12,7 @@ process CONCATVCF {
     tuple val(meta), path(snv_vcf), path(snv_tbi), path(indel_vcf), path(indel_tbi)
 
     output:
-    tuple val(meta), path("*combined_filtered.vcf.gz"), emit: vcf
+    tuple val(meta), path("*combined_filtered.updated.vcf.gz"), emit: vcf
     path "versions.yml"                                , emit: versions
 
     when:
@@ -41,9 +41,9 @@ process CONCATVCF {
 
     if [[ $meta == "CHM13_test" ]]; then
         echo $meta
-        awk 'BEGIN{OFS="\t"} /^#/ {print} !/^#/ {\$2=\$2+14000000; print}' ${prefix}_combined_filtered.vcf.gz > ${prefix}_combined_filtered.vcf.gz
+        awk 'BEGIN{OFS="\t"} /^#/ {print} !/^#/ {\$2=\$2+14000000; print}' ${prefix}_combined_filtered.vcf.gz | gzip > ${prefix}_combined_filtered.updated.vcf.gz
     else
-        echo "Not here"
+        zcat ${prefix}_combined_filtered.vcf.gz | gzip > ${prefix}_combined_filtered.updated.vcf.gz
     fi
 
     cat <<-END_VERSIONS > versions.yml
