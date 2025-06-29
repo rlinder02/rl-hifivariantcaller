@@ -1,3 +1,4 @@
-sample,fastq_1,fastq_2
-SAMPLE_PAIRED_END,/path/to/fastq/files/AEG588A1_S1_L002_R1_001.fastq.gz,/path/to/fastq/files/AEG588A1_S1_L002_R2_001.fastq.gz
-SAMPLE_SINGLE_END,/path/to/fastq/files/AEG588A4_S4_L003_R1_001.fastq.gz,
+sample,tx_bam,ctl_bam,ind_fasta,ind_fasta_fai,ref_fasta,ref_fai,chain
+J20_FC_CTL,data/J20_FC_APP_m84137_240223_225931_s2.hifi_reads.bc2069.bam,data/J20_FC_CTL_m84137_240224_005830_s3.hifi_reads.bc2070.bam,data/J20_CTL.primary.scaffolded.fasta,data/J20_CTL.primary.scaffolded.fasta.fai,data/mm10.chrs.fasta,data/mm10.chrs.fasta.fai,data/J20_CTL.primary.scaffoldedToMm10.chrs.over.chain.gz
+J20_HPPCPS_CTL,data/J20_HPPCPS_APP_m84137_240223_190109_s4.hifi_reads.bc2067.bam,data/J20_HPPCPS_CTL_m84137_240223_210015_s1.hifi_reads.bc2068.bam,data/J20_CTL.primary.scaffolded.fasta,data/J20_CTL.primary.scaffolded.fasta.fai,data/mm10.chrs.fasta,data/mm10.chrs.fasta.fai,data/J20_CTL.primary.scaffoldedToMm10.chrs.over.chain.gz
+J20_BL_CTL,data/J20_BL_APP_m84137_240516_014053_s1.bam,data/J20_BL_CTL_m84137_240516_034011_s2.bam,data/J20_CTL.primary.scaffolded.fasta,data/J20_CTL.primary.scaffolded.fasta.fai,data/mm10.chrs.fasta,data/mm10.chrs.fasta.fai,data/J20_CTL.primary.scaffoldedToMm10.chrs.over.chain.gz

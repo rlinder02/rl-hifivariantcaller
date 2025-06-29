@@ -10,51 +10,33 @@
 
 ## Introduction
 
-**rl/hifivariantcaller** is a bioinformatics pipeline that ...
-
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
-
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
-
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+**rl/hifivariantcaller** is a bioinformatics pipeline that call and annotates variants from PacBio HiFi data. 
 
 ## Usage
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
-
 First, prepare a samplesheet with your input data that looks as follows:
 
 `samplesheet.csv`:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+sample,tx_bam,ctl_bam,ind_fasta,ind_fasta_fai,ref_fasta,ref_fai,chain
+J20_FC_APP,data/J20_FC_APP_m84137_240223_225931_s2.hifi_reads.bc2069.bam,data/J20_FC_CTL_m84137_240224_005830_s3.hifi_reads.bc2070.bam,data/J20_CTL.primary.scaffolded.fasta,data/J20_CTL.primary.scaffolded.fasta.fai,data/mm10.chrs.fasta,data/mm10.chrs.fasta.fai,data/J20_CTL.primary.scaffoldedToMm10.chrs.over.chain.gz
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
+Each row represents a treatment/normal pair of bam files, as well as a genome fasta assembled from each individual sample, a genome fasta from the reference genome to use for annotation purposes, and a chain file to lift-over genomic coordinates from the individuals' genome to the reference genome. If there are no matched normal controls, use tumor-only mode by adding `--treatment_only` to the command line argument. 
 
 -->
 
 Now, you can run the pipeline using:
 
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
-
 ```bash
 nextflow run rl/hifivariantcaller \
-   -profile <docker/singularity/.../institute> \
-   --input samplesheet.csv \
-   --outdir <OUTDIR>
+   -profile docker \
+   --input assets/samplesheet.csv \
+   --outdir ./results
 ```
 
 > [!WARNING]

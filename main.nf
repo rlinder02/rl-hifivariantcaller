@@ -15,7 +15,7 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { HIFIVARIANTCALLER  } from './workflows/hifivariantcaller'
+include { HIFIVARIANTCALLER       } from './workflows/hifivariantcaller'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_hifivariantcaller_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_hifivariantcaller_pipeline'
 

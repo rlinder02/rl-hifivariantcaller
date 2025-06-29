@@ -79,20 +79,12 @@ workflow PIPELINE_INITIALISATION {
     Channel
         .fromSamplesheet("input")
         .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
+            meta, tx_bam, ctl_bam, ind_fasta, ind_fasta_fai, ref_fasta, ref_fai, chain ->
+                if (!ctl_bam) {
+                    return [ meta, tx_bam, ind_fasta, ind_fasta_fai, ref_fasta, ref_fai, chain ]
                 } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
+                    return [ meta, tx_bam, ctl_bam, ind_fasta, ind_fasta_fai, ref_fasta, ref_fai, chain ]
                 }
-        }
-        .groupTuple()
-        .map {
-            validateInputSamplesheet(it)
-        }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
         }
         .set { ch_samplesheet }
 
