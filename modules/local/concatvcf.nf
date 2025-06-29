@@ -12,7 +12,7 @@ process CONCATVCF {
     tuple val(meta), path(snv_vcf), path(snv_tbi), path(indel_vcf), path(indel_tbi)
 
     output:
-    tuple val(meta), path("*combined_filtered.updated.vcf.gz"), emit: vcf
+    tuple val(meta), path("*combined_filtered.vcf.gz"), emit: vcf
     path "versions.yml"                                       , emit: versions
 
     when:
@@ -38,13 +38,6 @@ process CONCATVCF {
         -Oz \\
         --threads $task.cpus \\
         -o ${prefix}_combined_filtered.vcf.gz
-
-    if [[ $meta == "CHM13_test" ]]; then
-        echo $meta
-        zcat ${prefix}_combined_filtered.vcf.gz | awk 'BEGIN{OFS="\t"} /^#/ {print} !/^#/ {\$2=\$2+14000000; print}' | sed 's/##contig=<ID=chr22,length=500000>/##contig=<ID=chr22,length=51324926>/' | gzip > ${prefix}_combined_filtered.updated.vcf.gz
-    else
-        zcat ${prefix}_combined_filtered.vcf.gz | gzip > ${prefix}_combined_filtered.updated.vcf.gz
-    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
