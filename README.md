@@ -13,8 +13,7 @@
 
 ## Usage
 
-![alt text](docs/images/docs/images/LongReadVariantCalling_Metromap.drawio.png)
-
+![alt text](docs/images/LongReadVariantCalling_Metromap.drawio.png)
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
