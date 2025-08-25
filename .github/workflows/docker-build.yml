@@ -16,7 +16,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
@@ -98,3 +98,27 @@ jobs:
           # Update concatvcf.nf  
           sed -i "s|'docker.io/rlinder02/vcfliftover:.*'|'${{ steps.tag.outputs.full_image }}'|g" modules/local/concatvcf.nf
           sed -i "s|'https://docker.io/rlinder02/vcfliftover:.*'|'https://${{ steps.tag.outputs.full_image }}'|g" modules/local/concatvcf.nf
+
+      - name: Commit and push updated container references
+        run: |
+          # Configure git
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Check if there are changes to commit
+          if git diff --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          
+          # Add and commit changes
+          git add modules/local/liftover.nf modules/local/concatvcf.nf
+          git commit -m "Update vcfliftover container to ${{ steps.tag.outputs.new_tag }}
+          
+          - Updated container references in liftover.nf and concatvcf.nf
+          - New image: ${{ steps.tag.outputs.full_image }}
+          
+          🤖 Generated with GitHub Actions"
+          
+          # Push changes to dev branch
+          git push origin dev

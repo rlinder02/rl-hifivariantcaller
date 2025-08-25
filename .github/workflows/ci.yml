@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - dev
+    paths-ignore:
+      - 'docker/vcfliftover/**'
   pull_request:
+    paths-ignore:
+      - 'docker/vcfliftover/**'
   release:
     types: [published]
 
