@@ -5,8 +5,8 @@ process CONCATVCF {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://docker.io/rlinder02/vcfliftover:dev':
-        'docker.io/rlinder02/vcfliftover:dev' }"
+        'https://docker.io/rlinder02/vcfliftover:v0.0.1':
+        'docker.io/rlinder02/vcfliftover:v0.0.1' }"
 
     input:
     tuple val(meta), path(snv_vcf), path(snv_tbi), path(indel_vcf), path(indel_tbi)
