@@ -29,6 +29,7 @@ process SNPEFF {
         new_ref_id="GRCm38.99"
     else
         new_ref_id=$ref_id
+        echo \$new_ref_id
     fi
     export _JAVA_OPTIONS="-Xms512m -Xmx8g"
     snpEff eff -motif -csvStats ${prefix}_summary.csv \$new_ref_id $vcf > ${prefix}.ann.vcf
