@@ -4,8 +4,8 @@ process LIFTOVER {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://docker.io/rlinder02/vcfliftover:v0.0.1':
-        'docker.io/rlinder02/vcfliftover:v0.0.1' }"
+        'https://docker.io/rlinder02/vcfliftover:dev':
+        'docker.io/rlinder02/vcfliftover:dev' }"
 
     input:
     tuple val(meta), path(vcf), path(ind_fasta), path(ind_fasta_fai), path(ref_fasta), path(ref_fasta_fai), path(chain)
