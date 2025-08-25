@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/robertlinder/Documents/Git_repos/rl-hifivariantcaller/**)",
+      "Read(//Users/robertlinder/Documents/Git_repos/rl-hifivariantcaller/**)",
+      "Read(//Users/robertlinder/Documents/Git_repos/rl-hifivariantcaller/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
